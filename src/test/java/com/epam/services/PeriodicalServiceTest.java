@@ -85,7 +85,7 @@ public class PeriodicalServiceTest {
         periodicalService.addMyChoice(1L);
         periodicalService.addMyChoice(2L);
         BigDecimal supToPay = periodicalService.sumToPay();
-        System.out.println("Sum to pay5: " + supToPay);
+        System.out.println("Sum to pay20: " + supToPay);
         assertThat(supToPay, is(BigDecimal.valueOf(3500)));
     }
 
