@@ -65,6 +65,12 @@
 			<version>2.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>5.3.0.CR1</version>
+		</dependency>
+
 		<!-- CGLib for @Configuration -->
 		<!--<dependency>-->
 			<!--<groupId>cglib</groupId>-->

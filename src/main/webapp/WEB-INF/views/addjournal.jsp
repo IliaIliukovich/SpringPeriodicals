@@ -27,23 +27,25 @@
 
     <spring:url value="/addjournal" var="formUrl"/>
 
-    <form:form action="${formUrl}" method="POST" modelAttribute="newJournal">
+    <form:form action="${formUrl}" method="POST" modelAttribute="journal">
 
         <div class="row">
 
             <div class="form-group">
-                <label for="newJournal-name">Name</label>
-                <form:input path="name" cssClass="form-control" id="newJournal-name"/>
+                <label for="journal-name">Name</label>
+                <form:input path="name" cssClass="form-control" id="journal-name"/>
+                <form:errors path="name"/>
             </div>
 
             <div class="form-group">
-                <label for="newJournal-description">Description</label>
-                <form:textarea id="newJournal-description" path="description" cssClass="form-control" rows="3"/>
+                <label for="journal-description">Description</label>
+                <form:textarea id="journal-description" path="description" cssClass="form-control" rows="3"/>
             </div>
 
             <div class="form-group">
-                <label for="newJournal-price">Price</label>
-                <form:input id="newJournal-price" cssClass="form-control" path="price" />
+                <label for="journal-price">Price</label>
+                <form:input id="journal-price" cssClass="form-control" path="price" />
+                <form:errors path="price"/>
             </div>
 
             <button type="submit" class="btn btn-default">Submit</button>

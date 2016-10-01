@@ -1,13 +1,26 @@
 package com.epam.entities;
 
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class Journal {
 
     private Long id_journal;
+
+    @NotBlank(message = "Please, enter name")
     private String name;
+
     private String description;
+
+    @NotNull(message = "Please, enter price")
+    @DecimalMin(value = "10", message = "Price must be higher than {value}")
+    @DecimalMax(value = "1000000", message = "Nobody will bye such a journal! Max value {value}")
     private BigDecimal price;
+
     private String subscription = "unsubscribed";
 
     public Journal() {

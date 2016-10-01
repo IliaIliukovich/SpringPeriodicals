@@ -4,10 +4,9 @@ import com.epam.entities.Journal;
 import com.epam.services.PeriodicalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.LinkedList;
-import java.util.List;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping(value="/addjournal")
@@ -22,12 +21,18 @@ public class AddJournalController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String addNewJournal(@ModelAttribute Journal newJournal){
-		periodicalService.addNewJournal(newJournal);
-		return "/addjournal";
+	public String addNewJournal(@Valid @ModelAttribute Journal journal, Errors errors){
+		if (!errors.hasErrors()) {
+			System.out.println("validated!");
+			periodicalService.addNewJournal(journal);
+			return "redirect:/addjournal";
+		} else {
+			System.out.println("not validated!");
+			return "addjournal";
+		}
 	}
 
-	@ModelAttribute("newJournal")
+	@ModelAttribute("journal")
 	public Journal getJournal(){
 		return new Journal();
 	}
