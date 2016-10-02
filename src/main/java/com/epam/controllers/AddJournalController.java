@@ -23,11 +23,9 @@ public class AddJournalController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String addNewJournal(@Valid @ModelAttribute Journal journal, Errors errors){
 		if (!errors.hasErrors()) {
-			System.out.println("validated!");
 			periodicalService.addNewJournal(journal);
 			return "redirect:/addjournal";
 		} else {
-			System.out.println("not validated!");
 			return "addjournal";
 		}
 	}
