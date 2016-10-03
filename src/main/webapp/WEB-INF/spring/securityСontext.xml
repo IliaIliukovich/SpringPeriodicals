@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
+
+	<security:http auto-config="true" use-expressions="false">
+							 <!--default-target-url="/journals/"-->
+		<security:form-login login-page="/login"
+							 login-processing-url="/login"
+							 username-parameter="custom_username"
+							 password-parameter="custom_password"
+							 always-use-default-target="true"
+							 authentication-failure-url="/login?error=true"/>
+		<security:logout logout-url="/logout" logout-success-url="/login?logout=true"/>
+		<security:intercept-url pattern="/addjournal" access="ROLE_ADMIN"/>
+		<security:intercept-url pattern="/myjournals" access="ROLE_USER"/>
+		<security:intercept-url pattern="/**" access="ROLE_ANONYMOUS, ROLE_USER"/>
+	</security:http>
+	
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:user-service>
+				<security:user name="tom" password="tom" authorities="ROLE_USER"/>
+				<security:user name="admin" password="admin" authorities="ROLE_USER, ROLE_ADMIN"/>
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+</beans>
