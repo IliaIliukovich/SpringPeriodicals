@@ -19,14 +19,14 @@ public class UserDAO {
         template = new JdbcTemplate(dataSource);
     }
 
-    public User getUser(String login) {
+    public User getUser(String username) {
         String sqlTxt = "SELECT * FROM user WHERE login=?";
-        return template.queryForObject(sqlTxt, new UserMapper(), login);
+        return template.queryForObject(sqlTxt, new UserMapper(), username);
     }
 
     public void createUser(User user) {
         String sqlTxt = "INSERT INTO user(login, password, role) values(?,?,?)";
-        template.update(sqlTxt, user.getLogin(), user.getPassword(), user.getRole());
+        template.update(sqlTxt, user.getUsername(), user.getPassword(), user.getRole());
     }
 
     private class UserMapper implements RowMapper<User> {

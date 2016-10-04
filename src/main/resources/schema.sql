@@ -16,11 +16,11 @@ USE `periodicals` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `periodicals`.`user` (
   `id_user` INT NOT NULL AUTO_INCREMENT,
-  `login` VARCHAR(45) NOT NULL,
+  `username` VARCHAR(45) NOT NULL,
   `password` VARCHAR(45) NOT NULL,
   `role` VARCHAR(45) NOT NULL DEFAULT 'user',
   PRIMARY KEY (`id_user`),
-  UNIQUE INDEX `Login_UNIQUE` (`login` ASC))
+  UNIQUE INDEX `Login_UNIQUE` (`username` ASC))
   ENGINE = InnoDB;
 
 -- -----------------------------------------------------

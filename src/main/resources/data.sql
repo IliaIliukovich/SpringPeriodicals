@@ -1,5 +1,5 @@
-INSERT INTO `user` (`id_user`, `login`, `password`, `role`) VALUES (NULL, 'admin', 'admin', 'admin');
-INSERT INTO `user` (`id_user`, `login`, `password`, `role`) VALUES (NULL, 'tom', 'tom', 'user' );
+INSERT INTO `user` (`id_user`, `username`, `password`, `role`) VALUES (NULL, 'admin', 'admin', 'ROLE_ADMIN');
+INSERT INTO `user` (`id_user`, `username`, `password`, `role`) VALUES (NULL, 'tom', 'tom', 'ROLE_USER' );
 
 INSERT INTO `journal` (`id_journal`, `name`, `description`, `price`) VALUES (NULL, 'STRF.ru', 'Интервью, мнения экспертов, анонсы событий в области науки и инноваций. Инновационные проекты. О Федеральной целевой научно-технической программе (руководство, участники и др.).', '1500');
 INSERT INTO `journal` (`id_journal`, `name`, `description`, `price`) VALUES (NULL, 'Наука и жизнь', 'Новости науки и техники, онлайн-интервью с известными учеными, видео. Архив журнала с 1998 года, материалы свежего номера. Форум.', '2000');

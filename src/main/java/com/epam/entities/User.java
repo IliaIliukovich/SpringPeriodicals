@@ -1,15 +1,23 @@
 package com.epam.entities;
 
-public class User {
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+
+public class User implements UserDetails {
 
     private Long id_user;
-    private String login;
+    private String username;
     private String password;
     private String role;
 
-    public User(Long id_user, String login, String password, String role) {
+    public User() {    }
+
+    public User(Long id_user, String username, String password, String role) {
         this.id_user = id_user;
-        this.login = login;
+        this.username = username;
         this.password = password;
         this.role = role;
     }
@@ -18,23 +26,50 @@ public class User {
         return id_user;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUsername() { return username; }
+
+    public String getPassword() { return password; }
+
+    public String getRole() { return role; }
+
+    public void setId_user(Long id_user) { this.id_user = id_user; }
+
+    public void setUsername(String username) { this.username = username; }
+
+    public void setPassword(String password) { this.password = password; }
+
+    public void setRole(String role) { this.role = role; }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return AuthorityUtils.createAuthorityList(this.role);
     }
 
-    public String getPassword() {
-        return password;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public String getRole() {
-        return role;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id_user=" + id_user +
-                ", login='" + login + '\'' +
+                ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
                 '}';

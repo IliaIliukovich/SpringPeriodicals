@@ -43,6 +43,7 @@
 						</c:otherwise>
 					</c:choose>
     			</li>
+				<li><a href="<spring:url value="/register/"/>">Register</a></li>
 
     		</ul>
     		

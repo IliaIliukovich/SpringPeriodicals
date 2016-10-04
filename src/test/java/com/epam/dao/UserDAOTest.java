@@ -29,11 +29,11 @@ public class UserDAOTest {
 
     @Test
     public  void addNewUser() throws Exception {
-        User user = new User(1L, "tom2", "la-la-la", "user");
+        User user = new User(1L, "tom2", "la-la-la", "ROLE_USER");
         dao.createUser(user);
         User user2 = dao.getUser("tom2");
         System.out.println(user2);
-        assertThat(user2.getLogin(), is(user.getLogin()));
+        assertThat(user2.getUsername(), is(user.getUsername()));
     }
 
 }

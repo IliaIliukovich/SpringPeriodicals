@@ -25,7 +25,7 @@ public class PeriodicalService {
     @Autowired
     SubscriptionDAO subscriptionDAO;
 
-    private User user = new User(2L, "tom", "tom", "user");
+    private User user = new User(2L, "tom", "tom", "ROLE_USER");
 
     public List<Journal> getJournals() {
         List <Journal> journals = journalDAO.getJournals();
