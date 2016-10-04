@@ -11,6 +11,7 @@ public class User implements UserDetails {
     private Long id_user;
     private String username;
     private String password;
+    private String passwordForConfirmation;
     private String role;
 
     public User() {    }
@@ -30,6 +31,8 @@ public class User implements UserDetails {
 
     public String getPassword() { return password; }
 
+    public String getPasswordForConfirmation() { return passwordForConfirmation; }
+
     public String getRole() { return role; }
 
     public void setId_user(Long id_user) { this.id_user = id_user; }
@@ -37,6 +40,8 @@ public class User implements UserDetails {
     public void setUsername(String username) { this.username = username; }
 
     public void setPassword(String password) { this.password = password; }
+
+    public void setPasswordForConfirmation(String pwd) { this.passwordForConfirmation = pwd; }
 
     public void setRole(String role) { this.role = role; }
 
@@ -71,6 +76,7 @@ public class User implements UserDetails {
                 "id_user=" + id_user +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", passwordForConfirmation='" + passwordForConfirmation + '\'' +
                 ", role='" + role + '\'' +
                 '}';
     }

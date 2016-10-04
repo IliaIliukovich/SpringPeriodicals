@@ -15,7 +15,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-@Service @Transactional
+@Service
+@Transactional
 public class PeriodicalService {
 
     @Autowired

@@ -40,45 +40,37 @@ public class PeriodicalServiceTest {
         assertThat(journals.size(), is(9));
     }
 
-//    @Test
-//    public  void testAddMyChoice() throws Exception {
-//        periodicalService.addMyChoice(1L);
-//        periodicalService.addMyChoice(2L);
-//        List<Choice> choices = periodicalService.getChoices();
-//        choices.forEach(System.out::println);
-//        assertThat(choices.size(), is(2));
-//    }
+    @Test
+    public  void testAddGetMyChoice() throws Exception {
+        periodicalService.addMyChoice(1L);
+        periodicalService.addMyChoice(2L);
+        List<Journal> choiceJournals = periodicalService.getChoiceJournals();
+        choiceJournals.forEach(System.out::println);
+        assertThat(choiceJournals.size(), is(2));
+    }
 
-//    @Test
-//    public  void testDeleteMyChoice() throws Exception {
-//        periodicalService.addMyChoice(1L);
-//        periodicalService.addMyChoice(2L);
-//        List<Choice> choices = periodicalService.getChoices();
-//        choices.forEach(System.out::println);
-//        periodicalService.deleteMyChoice(choices.get(0).getId_choice());
-//        List<Choice> choices2 = periodicalService.getChoices();
-//        choices2.forEach(System.out::println);
-//        assertThat(choices2.size(), is(1));
-//    }
+    @Test
+    public  void testDeleteMyChoice() throws Exception {
+        periodicalService.addMyChoice(1L);
+        periodicalService.addMyChoice(2L);
+        List<Journal> choiceJournals = periodicalService.getChoiceJournals();
+        choiceJournals.forEach(System.out::println);
+        periodicalService.deleteMyChoice(choiceJournals.get(0).getId_journal());
+        List<Journal> choiceJournals2 = periodicalService.getChoiceJournals();
+        choiceJournals2.forEach(System.out::println);
+        assertThat(choiceJournals2.size(), is(1));
+    }
 
-//    @Test
-//    public void testGetChoices() throws Exception {
-//        periodicalService.addMyChoice(1L);
-//        periodicalService.addMyChoice(2L);
-//        List<Choice> choices = periodicalService.getChoices();
-//        choices.forEach(System.out::println);
-//        assertThat(choices.size(), is(2));
-//    }
 
-//    @Test
-//    public void testGetSubscriptions() throws Exception {
-//        periodicalService.addMyChoice(1L);
-//        periodicalService.addMyChoice(2L);
-//        periodicalService.pay(BigDecimal.valueOf(3500));
-//        List<Subscription> subscriptions = periodicalService.getSubscriptions();
-//        subscriptions.forEach(System.out::println);
-//        assertThat(subscriptions.size(), is(2));
-//    }
+    @Test
+    public void testGetSubscriptions() throws Exception {
+        periodicalService.addMyChoice(1L);
+        periodicalService.addMyChoice(2L);
+        periodicalService.pay(BigDecimal.valueOf(3500));
+        List<Journal> subscriptionJournals = periodicalService.getSubscriptionJournals();
+        subscriptionJournals.forEach(System.out::println);
+        assertThat(subscriptionJournals.size(), is(2));
+    }
 
     @Test
     public void testSumToPay() throws Exception {
@@ -89,15 +81,15 @@ public class PeriodicalServiceTest {
         assertThat(supToPay, is(BigDecimal.valueOf(3500)));
     }
 
-//    @Test
-//    public void testPays() throws Exception {
-//        periodicalService.addMyChoice(1L);
-//        periodicalService.addMyChoice(2L);
-//        periodicalService.pay(BigDecimal.valueOf(3500));
-//        List<Subscription> subscriptions = periodicalService.getSubscriptions();
-//        subscriptions.forEach(System.out::println);
-//        assertThat(subscriptions.size(), is(2));
-//        List<Choice> choices = periodicalService.getChoices();
-//        assertTrue(choices.isEmpty());
-//    }
+    @Test
+    public void testPays() throws Exception {
+        periodicalService.addMyChoice(1L);
+        periodicalService.addMyChoice(2L);
+        periodicalService.pay(BigDecimal.valueOf(3500));
+        List<Journal> subscriptionJournals = periodicalService.getSubscriptionJournals();
+        subscriptionJournals.forEach(System.out::println);
+        assertThat(subscriptionJournals.size(), is(2));
+        List<Journal> choiceJournals = periodicalService.getChoiceJournals();
+        assertTrue(choiceJournals.isEmpty());
+    }
 }

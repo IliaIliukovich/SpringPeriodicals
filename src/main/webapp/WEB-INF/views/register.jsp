@@ -23,23 +23,38 @@
 <jsp:include page="../views/fragments/header.jsp"></jsp:include>
 
 <div class="container">
+
     <div class="row">
         <h1>Register</h1>
     </div>
-    <c:url value="/register" var="loginVar"/>
-    <form id="appointment-form" action="${loginVar}" method="POST">
-        <div class="form-group">
-            <label for="make">Username</label>
-            <input name="username" class="form-control" />
-        </div>
-        <div class="form-group">
-            <label for="model">Password</label>
-            <input type="password" name="password" class="form-control" />
-        </div>
-        <sec:csrfInput/>
 
-        <button type="submit" id="btn-save" class="btn btn-primary">Login</button>
-    </form>
+    <c:url value="/register" var="loginVar"/>
+    <form:form action="${loginVar}" method="POST" modelAttribute="user">
+        <div class="row">
+
+            <div class="form-group">
+                <label for="user-username">Username:</label>
+                <form:input path="username" cssClass="form-control" id="user-username"/>
+                <form:errors path="username"/>
+            </div>
+
+            <div class="form-group">
+                <label for="user-password">Password:</label>
+                <form:password path="password" cssClass="form-control" id="user-password"/>
+                <form:errors path="password"/>
+            </div>
+
+            <div class="form-group">
+                <label for="user-password">Confirm your password:</label>
+                <form:password path="passwordForConfirmation" cssClass="form-control" id="user-passwordForConfirmation"/>
+            </div>
+
+            <sec:csrfInput/>
+            <button type="submit" class="btn btn-default">Register</button>
+
+        </div>
+
+    </form:form>
 </div>
 </body>
 </html>

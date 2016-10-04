@@ -20,19 +20,19 @@ public class UserDAO {
     }
 
     public User getUser(String username) {
-        String sqlTxt = "SELECT * FROM user WHERE login=?";
+        String sqlTxt = "SELECT * FROM user WHERE username=?";
         return template.queryForObject(sqlTxt, new UserMapper(), username);
     }
 
     public void createUser(User user) {
-        String sqlTxt = "INSERT INTO user(login, password, role) values(?,?,?)";
+        String sqlTxt = "INSERT INTO user(username, password, role) values(?,?,?)";
         template.update(sqlTxt, user.getUsername(), user.getPassword(), user.getRole());
     }
 
     private class UserMapper implements RowMapper<User> {
         @Override
         public User mapRow(ResultSet resultSet, int i) throws SQLException {
-            return new User(resultSet.getLong("id_user"), resultSet.getString("login"),
+            return new User(resultSet.getLong("id_user"), resultSet.getString("username"),
                     resultSet.getString("password"), resultSet.getString("role"));
         }
     }
