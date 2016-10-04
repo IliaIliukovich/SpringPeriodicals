@@ -24,7 +24,7 @@ public class UserDAOTest {
     public void testGetUser() throws Exception {
         User user = dao.getUser("admin");
         System.out.println(user);
-        assertThat(user.getPassword(), is("admin"));
+        assertThat(user.getPassword(), is("9dddec223b46691738e5e25d671b306d0442c2c6372492fb794f259526399b7d6d8f42657fcbcf1b"));
     }
 
     @Test

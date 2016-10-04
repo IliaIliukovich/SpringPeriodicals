@@ -3,12 +3,14 @@ package com.epam.validators;
 import com.epam.dao.UserDAO;
 import com.epam.entities.User;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 public class UserValidator implements Validator {
 
-    UserDAO dao;
+    private UserDAO dao;
+    private StandardPasswordEncoder encoder = new StandardPasswordEncoder();
 
     public UserValidator(UserDAO dao) {
         this.dao = dao;
@@ -26,6 +28,7 @@ public class UserValidator implements Validator {
             errors.rejectValue("password", "user.password", "Incorrect password. Please try again");
         } else {
             user.setRole("ROLE_USER");
+            user.setPassword(encoder.encode(user.getPassword()));
             try {
                 dao.createUser(user);
             } catch (DuplicateKeyException exception) {

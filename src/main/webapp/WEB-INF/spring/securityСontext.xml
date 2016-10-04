@@ -28,7 +28,11 @@
 	</security:http>
 	
 	<security:authentication-manager>
-		<security:authentication-provider user-service-ref="customUserDetailsService"/>
+		<security:authentication-provider user-service-ref="customUserDetailsService">
+			<security:password-encoder ref="passwordEncoder"/>
+		</security:authentication-provider>
 	</security:authentication-manager>
+
+	<bean id="passwordEncoder" class="org.springframework.security.crypto.password.StandardPasswordEncoder"/>
 
 </beans>

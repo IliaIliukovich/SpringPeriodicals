@@ -118,23 +118,19 @@ public class PeriodicalService {
     private void setJournalSubscription(List<Journal> journals) {
         List<Choice> choices = choiceDAO.getChoices(user.getId_user());
         if (!choices.isEmpty()) {
-            choices.forEach(choice -> {
-                journals.forEach(journal -> {
-                    if (choice.getId_journal() == journal.getId_journal()) {
-                        journal.setSubscription("chosen");
-                    }
-                });
-            });
+            choices.forEach(choice -> journals.forEach(journal -> {
+                if (choice.getId_journal() == journal.getId_journal()) {
+                    journal.setSubscription("chosen");
+                }
+            }));
         }
         List<Subscription> subscriptions = subscriptionDAO.getSubscriptions(user.getId_user());
         if (!subscriptions.isEmpty()) {
-            subscriptions.forEach(subscription -> {
-                journals.forEach(journal -> {
-                    if (subscription.getId_journal() == journal.getId_journal()) {
-                        journal.setSubscription("subscribed");
-                    }
-                });
-            });
+            subscriptions.forEach(subscription -> journals.forEach(journal -> {
+                if (subscription.getId_journal() == journal.getId_journal()) {
+                    journal.setSubscription("subscribed");
+                }
+            }));
         }
     }
 }
