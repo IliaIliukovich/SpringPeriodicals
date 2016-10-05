@@ -12,8 +12,10 @@ import javax.validation.Valid;
 @RequestMapping(value="/addjournal")
 public class AddJournalController {
 
+	private final PeriodicalService periodicalService;
+
 	@Autowired
-	private PeriodicalService periodicalService;
+	public AddJournalController(PeriodicalService periodicalService) { this.periodicalService = periodicalService; }
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String review(){

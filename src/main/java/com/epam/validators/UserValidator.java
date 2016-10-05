@@ -1,20 +1,22 @@
 package com.epam.validators;
 
-import com.epam.dao.UserDAO;
 import com.epam.entities.User;
+import com.epam.services.PeriodicalService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+@Component
 public class UserValidator implements Validator {
 
-    private UserDAO dao;
-    private StandardPasswordEncoder encoder = new StandardPasswordEncoder();
+    private final StandardPasswordEncoder encoder = new StandardPasswordEncoder();
+    private final PeriodicalService periodicalService;
 
-    public UserValidator(UserDAO dao) {
-        this.dao = dao;
-    }
+    @Autowired
+    public UserValidator(PeriodicalService periodicalService) { this.periodicalService = periodicalService; }
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -30,7 +32,9 @@ public class UserValidator implements Validator {
             user.setRole("ROLE_USER");
             user.setPassword(encoder.encode(user.getPassword()));
             try {
-                dao.createUser(user);
+                periodicalService.createUser(user);
+                User createdUser = periodicalService.getUser(user.getUsername());
+                user.setId_user(createdUser.getId_user());
             } catch (DuplicateKeyException exception) {
                 errors.rejectValue("username", "user.username", "User with such name already exists");
             } catch (Exception exception) {

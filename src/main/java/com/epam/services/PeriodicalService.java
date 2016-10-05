@@ -3,6 +3,7 @@ package com.epam.services;
 import com.epam.dao.ChoiceDAO;
 import com.epam.dao.JournalDAO;
 import com.epam.dao.SubscriptionDAO;
+import com.epam.dao.UserDAO;
 import com.epam.entities.Choice;
 import com.epam.entities.Journal;
 import com.epam.entities.Subscription;
@@ -19,34 +20,40 @@ import java.util.List;
 @Transactional
 public class PeriodicalService {
 
-    @Autowired
-    JournalDAO journalDAO;
-    @Autowired
-    ChoiceDAO choiceDAO;
-    @Autowired
-    SubscriptionDAO subscriptionDAO;
+    private final JournalDAO journalDAO;
+    private final ChoiceDAO choiceDAO;
+    private final SubscriptionDAO subscriptionDAO;
+    private final UserDAO userDAO;
 
-    private User user = new User(2L, "tom", "tom", "ROLE_USER");
+    @Autowired
+    public PeriodicalService(JournalDAO journalDAO, ChoiceDAO choiceDAO, SubscriptionDAO subscriptionDAO, UserDAO userDAO) {
+        this.journalDAO = journalDAO;
+        this.choiceDAO = choiceDAO;
+        this.subscriptionDAO = subscriptionDAO;
+        this.userDAO = userDAO;
+    }
 
     public List<Journal> getJournals() {
-        List <Journal> journals = journalDAO.getJournals();
-        setJournalSubscription(journals);
+        return journalDAO.getJournals();
+    }
+
+    public List<Journal> getJournals(User user) {
+        List <Journal> journals = getJournals();
+        setJournalSubscription(journals, user);
         return journals;
     }
 
-    public void addNewJournal(Journal journal) {
-        journalDAO.addJournal(journal);
-    }
+    public void addNewJournal(Journal journal) { journalDAO.addJournal(journal); }
 
-    public void addMyChoice(Long id_journal) {
+    public void addMyChoice(Long id_journal, User user) {
         Journal journalById = journalDAO.getJournalbyId(id_journal);
-        if (!journalById.equals(null)) {
+        if (journalById != null) {
             Choice choice = new Choice(1L, user.getId_user(), journalById.getId_journal());
             choiceDAO.addChoice(choice);
         }
     }
 
-    public void deleteMyChoice(Long id_journal) {
+    public void deleteMyChoice(Long id_journal, User user) {
         List<Choice> choices = choiceDAO.getChoices(user.getId_user());
         if (!choices.isEmpty()) {
             choices.forEach(choice -> {
@@ -57,7 +64,7 @@ public class PeriodicalService {
         }
     }
 
-    public List<Journal> getChoiceJournals() {
+    public List<Journal> getChoiceJournals(User user) {
         List<Journal> journals = journalDAO.getJournals();
         List<Choice> choices = choiceDAO.getChoices(user.getId_user());
         List <Journal> myChoiceJournals = new LinkedList<>();
@@ -73,7 +80,7 @@ public class PeriodicalService {
         return myChoiceJournals;
     }
 
-    public List<Journal> getSubscriptionJournals() {
+    public List<Journal> getSubscriptionJournals(User user) {
         List<Journal> journals = journalDAO.getJournals();
         List<Subscription> subscriptions = subscriptionDAO.getSubscriptions(user.getId_user());
         List <Journal> mySubscriptionJournals = new LinkedList<>();
@@ -89,7 +96,7 @@ public class PeriodicalService {
         return mySubscriptionJournals;
     }
 
-    public BigDecimal sumToPay() {
+    public BigDecimal sumToPay(User user) {
         List<Choice> choices = choiceDAO.getChoices(user.getId_user());
         if (!choices.isEmpty()) {
             List<Journal> journalList = new ArrayList<>();
@@ -103,8 +110,8 @@ public class PeriodicalService {
         return BigDecimal.ZERO;
     }
 
-    public void pay(BigDecimal sum) {
-        if (sum.equals(sumToPay())) {
+    public void pay(BigDecimal sum, User user) {
+        if (sum.equals(sumToPay(user))) {
             List<Choice> choices = choiceDAO.getChoices(user.getId_user());
             if (!choices.isEmpty()) {
                 for (Choice choice : choices) {
@@ -115,22 +122,32 @@ public class PeriodicalService {
         }
     }
 
-    private void setJournalSubscription(List<Journal> journals) {
-        List<Choice> choices = choiceDAO.getChoices(user.getId_user());
-        if (!choices.isEmpty()) {
-            choices.forEach(choice -> journals.forEach(journal -> {
-                if (choice.getId_journal() == journal.getId_journal()) {
-                    journal.setSubscription("chosen");
-                }
-            }));
+    private void setJournalSubscription(List<Journal> journals, User user) {
+        if (user.getId_user() != null) {
+            List<Choice> choices = choiceDAO.getChoices(user.getId_user());
+            if (!choices.isEmpty()) {
+                choices.forEach(choice -> journals.forEach(journal -> {
+                    if (choice.getId_journal() == journal.getId_journal()) {
+                        journal.setSubscription("chosen");
+                    }
+                }));
+            }
+            List<Subscription> subscriptions = subscriptionDAO.getSubscriptions(user.getId_user());
+            if (!subscriptions.isEmpty()) {
+                subscriptions.forEach(subscription -> journals.forEach(journal -> {
+                    if (subscription.getId_journal() == journal.getId_journal()) {
+                        journal.setSubscription("subscribed");
+                    }
+                }));
+            }
         }
-        List<Subscription> subscriptions = subscriptionDAO.getSubscriptions(user.getId_user());
-        if (!subscriptions.isEmpty()) {
-            subscriptions.forEach(subscription -> journals.forEach(journal -> {
-                if (subscription.getId_journal() == journal.getId_journal()) {
-                    journal.setSubscription("subscribed");
-                }
-            }));
-        }
+    }
+
+    public void createUser(User user) {
+        userDAO.createUser(user);
+    }
+
+    public User getUser(String username) {
+        return userDAO.getUser(username);
     }
 }

@@ -26,15 +26,9 @@ public class ChoiceDAOTest {
         dao.addChoice(new Choice(1L, 2L, 2L));
         dao.addChoice(new Choice(1L, 2L, 3L));
         List<Choice> choices = dao.getChoices(2L);
-        for (Choice choice : choices) {
-            System.out.println(choice);
-        }
         assertThat(choices.size(), is(3));
         dao.deleteChoice(choices.get(0).getId_choice());
         List<Choice> choices2 = dao.getChoices(2L);
-        for (Choice choice : choices2) {
-            System.out.println(choice);
-        }
         assertThat(choices2.size(), is(2));
     }
 

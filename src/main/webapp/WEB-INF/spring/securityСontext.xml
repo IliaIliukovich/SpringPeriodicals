@@ -13,7 +13,7 @@
 	<context:component-scan base-package="com.epam"/>
 	<bean class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
 
-	<security:http auto-config="true" use-expressions="false">
+	<security:http auto-config="true" use-expressions="true">
 		<security:form-login login-page="/login"
 							 login-processing-url="/login"
 							 username-parameter="custom_username"
@@ -22,9 +22,9 @@
 							 always-use-default-target="true"
 							 authentication-failure-url="/login?error=true"/>
 		<security:logout logout-url="/logout" logout-success-url="/login?logout=true"/>
-		<security:intercept-url pattern="/addjournal" access="ROLE_ADMIN"/>
-		<security:intercept-url pattern="/myjournals" access="ROLE_USER, ROLE_ADMIN"/>
-		<security:intercept-url pattern="/**" access="ROLE_ANONYMOUS, ROLE_USER, ROLE_ADMIN"/>
+		<security:intercept-url pattern="/addjournal" access="hasRole('ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/myjournals" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/**" access="permitAll"/>
 	</security:http>
 	
 	<security:authentication-manager>

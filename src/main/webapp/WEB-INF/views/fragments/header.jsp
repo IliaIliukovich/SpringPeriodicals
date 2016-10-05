@@ -17,21 +17,15 @@
 					   aria-expanded="false">Journals <span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
 						<li><a href="<spring:url value="/journals"/>">All journals</a></li>
-						<sec:authorize access="hasRole('ROLE_ADMIN')" var="ROLE_ADMIN"/>
-						<c:choose>
-							<c:when test="${ROLE_ADMIN}">
-								<li><a href="<spring:url value="/addjournal"/>">Add journal</a></li>
-							</c:when>
-						</c:choose>
+						<sec:authorize access="hasRole('ROLE_ADMIN')">
+							<li><a href="<spring:url value="/addjournal"/>">Add journal</a></li>
+						</sec:authorize>
 					</ul>
 				</li>
 
-				<sec:authorize access="hasRole('ROLE_USER') || hasRole('ROLE_ADMIN')" var="ROLE_USER"/>
-				<c:choose>
-					<c:when test="${ROLE_USER}">
-						<li><a href="<spring:url value="/myjournals"/>">My journals</a></li>
-					</c:when>
-				</c:choose>
+				<sec:authorize access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')">
+					<li><a href="<spring:url value="/myjournals"/>">My journals</a></li>
+				</sec:authorize>
 
 				<li>
 					<sec:authorize access="authenticated" var="authenticated"/>

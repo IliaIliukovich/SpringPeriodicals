@@ -26,16 +26,12 @@ public class JournalDAOTest {
     @Test
     public void testGetJornal() throws Exception {
         Journal journal = dao.getJournalbyId(1L);
-        System.out.println(journal);
         assertThat(journal.getName(), is("STRF.ru"));
     }
 
     @Test
     public void testGetAllJournals() throws Exception {
         List<Journal> journals = dao.getJournals();
-        for (Journal journal : journals) {
-            System.out.println(journal);
-        }
         assertThat(journals, is(notNullValue()));
     }
 

@@ -31,9 +31,6 @@ public class SubscriptionDAOTest {
         dao.addSubscription(subscription2);
         dao.addSubscription(subscription3);
         List<Subscription> subscriptions = dao.getSubscriptions(2L);
-        for (Subscription subscription : subscriptions) {
-            System.out.println(subscription);
-        }
         assertThat(subscriptions.size(), is(3));
     }
 

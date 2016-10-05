@@ -1,6 +1,5 @@
 package com.epam.controllers;
 
-import com.epam.dao.UserDAO;
 import com.epam.entities.User;
 import com.epam.validators.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +19,10 @@ import javax.validation.Valid;
 @Controller
 public class HomeController {
 
+	private final UserValidator validator;
+
 	@Autowired
-	UserDAO dao;
+	public HomeController(UserValidator validator) { this.validator = validator; }
 
 	@RequestMapping("/")
 	public String goHome(){
@@ -58,7 +59,7 @@ public class HomeController {
 
 	@InitBinder
 	public void addBinder(WebDataBinder binder) {
-		binder.addValidators(new UserValidator(dao));
+		binder.addValidators(validator);
 	}
 	
 }

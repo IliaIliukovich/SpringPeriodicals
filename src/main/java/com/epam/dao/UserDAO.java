@@ -12,7 +12,8 @@ import java.sql.SQLException;
 
 @Repository
 public class UserDAO {
-    private JdbcTemplate template;
+
+    private final JdbcTemplate template;
 
     @Autowired
     public UserDAO(DataSource dataSource) {

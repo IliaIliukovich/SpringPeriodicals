@@ -13,7 +13,8 @@ import java.util.List;
 
 @Repository
 public class SubscriptionDAO {
-    private JdbcTemplate template;
+
+    private final JdbcTemplate template;
 
     @Autowired
     public SubscriptionDAO(DataSource dataSource) {

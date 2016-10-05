@@ -13,7 +13,8 @@ import java.util.List;
 
 @Repository
 public class ChoiceDAO {
-    private JdbcTemplate template;
+
+    private final JdbcTemplate template;
 
     @Autowired
     public ChoiceDAO(DataSource dataSource) {

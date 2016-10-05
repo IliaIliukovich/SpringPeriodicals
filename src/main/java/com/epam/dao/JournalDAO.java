@@ -13,7 +13,8 @@ import java.util.List;
 
 @Repository
 public class JournalDAO {
-    private JdbcTemplate template;
+
+    private final JdbcTemplate template;
 
     @Autowired
     public JournalDAO(DataSource dataSource) {
