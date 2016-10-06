@@ -49,7 +49,6 @@
                 <form:password path="passwordForConfirmation" cssClass="form-control" id="user-passwordForConfirmation"/>
             </div>
 
-            <sec:csrfInput/>
             <button type="submit" class="btn btn-default">Register</button>
 
         </div>

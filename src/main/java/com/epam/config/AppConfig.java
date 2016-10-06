@@ -19,8 +19,10 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 public class AppConfig {
 
+    private final Environment env;
+
     @Autowired
-    private Environment env;
+    public AppConfig(Environment env) { this.env = env; }
 
     @Bean (name = "dataSourse")
     public DataSource dataSource() {
