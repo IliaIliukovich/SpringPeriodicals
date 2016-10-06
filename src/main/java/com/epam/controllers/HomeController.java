@@ -42,7 +42,6 @@ public class HomeController {
 	@RequestMapping(value="/register", method=RequestMethod.POST)
 	public String register(@Valid @ModelAttribute User user, Errors errors){
 		if (!errors.hasErrors()) {
-			System.out.println(user);
 			Authentication auth = new UsernamePasswordAuthenticationToken(user,
 					user.getPassword(), user.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(auth);

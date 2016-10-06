@@ -1,7 +1,7 @@
 package com.epam.entities;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
-
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
@@ -12,6 +12,7 @@ public class Journal {
     private Long id_journal;
 
     @NotBlank(message = "Please, enter name")
+    @Length(max = 45, message = "Name length should be no more than 45 symbols")
     private String name;
 
     private String description;
