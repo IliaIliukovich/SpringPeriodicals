@@ -32,7 +32,7 @@ public class JournalDAO {
     }
 
     public void addJournal(Journal journal) {
-        String sqlTxt = "INSERT INTO journal(name, description, price) values(?,?, ?)";
+        String sqlTxt = "INSERT INTO journal(name, description, price) values(?,?,?)";
         template.update(sqlTxt, journal.getName(), journal.getDescription(), journal.getPrice());
     }
 

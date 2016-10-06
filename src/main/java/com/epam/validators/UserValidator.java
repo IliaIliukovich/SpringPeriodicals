@@ -37,9 +37,6 @@ public class UserValidator implements Validator {
                 user.setId_user(createdUser.getId_user());
             } catch (DuplicateKeyException exception) {
                 errors.rejectValue("username", "user.username", "User with such name already exists");
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                errors.rejectValue("username", "user.username", "An error occured. Please try again");
             }
         }
     }

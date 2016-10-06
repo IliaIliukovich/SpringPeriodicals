@@ -122,6 +122,10 @@ public class PeriodicalService {
         }
     }
 
+    public void createUser(User user) { userDAO.createUser(user); }
+
+    public User getUser(String username) { return userDAO.getUser(username); }
+
     private void setJournalSubscription(List<Journal> journals, User user) {
         if (user.getId_user() != null) {
             List<Choice> choices = choiceDAO.getChoices(user.getId_user());
@@ -143,11 +147,4 @@ public class PeriodicalService {
         }
     }
 
-    public void createUser(User user) {
-        userDAO.createUser(user);
-    }
-
-    public User getUser(String username) {
-        return userDAO.getUser(username);
-    }
 }
