@@ -45,6 +45,12 @@ public class PeriodicalService {
 
     public void addNewJournal(Journal journal) { journalDAO.addJournal(journal); }
 
+    public void editJournal(Journal journal) {
+        if (journal.getId_journal() != null) {
+            journalDAO.editJournal(journal);
+        }
+    }
+
     public void addMyChoice(Long id_journal, User user) {
         Journal journalById = journalDAO.getJournalbyId(id_journal);
         if (journalById != null) {
@@ -110,7 +116,7 @@ public class PeriodicalService {
         return BigDecimal.ZERO;
     }
 
-    public void pay(BigDecimal sum, User user) throws Exception {
+    public void pay(BigDecimal sum, User user) {
         if (sum.equals(sumToPay(user))) {
             List<Choice> choices = choiceDAO.getChoices(user.getId_user());
             if (!choices.isEmpty()) {
@@ -119,8 +125,6 @@ public class PeriodicalService {
                     choiceDAO.deleteChoice(choice.getId_choice());
                 }
             }
-        } else {
-            throw new Exception("Incorrect sum for payment");
         }
     }
 

@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,6 +33,11 @@ public class JournalDAO {
     public void addJournal(Journal journal) {
         String sqlTxt = "INSERT INTO journal(name, description, price) values(?,?,?)";
         template.update(sqlTxt, journal.getName(), journal.getDescription(), journal.getPrice());
+    }
+
+    public void editJournal(Journal journal) {
+        String sqlTxt = "UPDATE journal SET name=?, description=?, price=? WHERE id_journal=?";
+        template.update(sqlTxt, journal.getName(), journal.getDescription(), journal.getPrice(), journal.getId_journal());
     }
 
     private class JournalMapper implements RowMapper<Journal> {

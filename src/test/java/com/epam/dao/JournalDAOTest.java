@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -37,10 +38,20 @@ public class JournalDAOTest {
 
     @Test
     public  void addNewJournal() throws Exception {
-        Journal journal1 = new Journal(1L,"test", "la-la-la", BigDecimal.valueOf(1777));
-        dao.addJournal(journal1);
+        Journal journal = new Journal(1L,"test", "la-la-la", BigDecimal.valueOf(1777));
+        dao.addJournal(journal);
         List<Journal> journals = dao.getJournals();
         assertThat(journals.size(), is(9));
+    }
+
+    @Test
+    public  void editJournal() throws Exception {
+        Journal journalBeforeTest = dao.getJournalbyId(1L);
+        assertThat(journalBeforeTest.getDescription(), is(not("la-la-la")));
+        Journal journal = new Journal(1L,"test", "la-la-la", BigDecimal.valueOf(1777));
+        dao.editJournal(journal);
+        Journal journalAfterTest = dao.getJournalbyId(1L);
+        assertThat(journalAfterTest.getDescription(), is("la-la-la"));
     }
 
 }

@@ -45,7 +45,7 @@ public class MyJournalController {
 	}
 
 	@RequestMapping(value = "/pay", method = RequestMethod.POST)
-	public String pay(@RequestParam BigDecimal sum) throws Exception {
+	public String pay(@RequestParam BigDecimal sum) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User currentUser = (User)auth.getPrincipal();
 		periodicalService.pay(sum, currentUser);
