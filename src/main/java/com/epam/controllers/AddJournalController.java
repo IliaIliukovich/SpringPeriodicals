@@ -6,10 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
+
 import javax.validation.Valid;
 
 @Controller
 @RequestMapping(value="/addjournal")
+@SessionAttributes("journal")
 public class AddJournalController {
 
 	private final PeriodicalService periodicalService;
@@ -23,12 +26,13 @@ public class AddJournalController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String addNewJournal(@Valid @ModelAttribute Journal journal, Errors errors){
+	public String addNewJournal(@Valid @ModelAttribute Journal journal, Errors errors, SessionStatus status){
 		if (!errors.hasErrors()) {
 			periodicalService.addNewJournal(journal);
+			status.setComplete();
 			return "redirect:/addjournal";
 		} else {
-			return "addjournal";
+			return "/addjournal";
 		}
 	}
 

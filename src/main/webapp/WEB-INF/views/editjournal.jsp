@@ -23,10 +23,10 @@
 <div class="container">
 
     <div class="row">
-        <h1>Add new a journal</h1>
+        <h1>Edit the journal</h1>
     </div>
 
-    <spring:url value="/addjournal" var="formUrl"/>
+    <spring:url value="/editjournal" var="formUrl"/>
 
     <form:form action="${formUrl}" method="POST" modelAttribute="journal">
 

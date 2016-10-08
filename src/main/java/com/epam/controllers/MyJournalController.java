@@ -33,7 +33,7 @@ public class MyJournalController {
 		model.addAttribute("myChoiceJournals", myChoiceJournals);
 		model.addAttribute("mySubscriptionJournals", mySubscriptionJournals);
 		model.addAttribute("sumToPay", sum);
-		return "myjournals";
+		return "/myjournals";
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
@@ -45,7 +45,7 @@ public class MyJournalController {
 	}
 
 	@RequestMapping(value = "/pay", method = RequestMethod.POST)
-	public String pay(@RequestParam BigDecimal sum){
+	public String pay(@RequestParam BigDecimal sum) throws Exception {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User currentUser = (User)auth.getPrincipal();
 		periodicalService.pay(sum, currentUser);

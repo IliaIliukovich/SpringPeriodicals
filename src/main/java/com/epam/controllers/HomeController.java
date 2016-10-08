@@ -9,14 +9,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @Controller
+@SessionAttributes("user")
 public class HomeController {
 
 	private final UserValidator validator;
@@ -26,17 +24,17 @@ public class HomeController {
 
 	@RequestMapping("/")
 	public String goHome(){
-		return "home";
+		return "/home";
 	}
 
 	@RequestMapping(value="/login", method= RequestMethod.GET)
 	public String goLogin(){
-		return "login";
+		return "/login";
 	}
 
 	@RequestMapping(value="/register", method=RequestMethod.GET)
 	public String goRegister(){
-		return "register";
+		return "/register";
 	}
 
 	@RequestMapping(value="/register", method=RequestMethod.POST)
@@ -47,7 +45,7 @@ public class HomeController {
 			SecurityContextHolder.getContext().setAuthentication(auth);
 			return "redirect:/";
 		} else {
-			return "register";
+			return "/register";
 		}
 	}
 

@@ -9,13 +9,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(value="/journals")
+@SessionAttributes("journals")
 public class JournalController {
 
 	private final PeriodicalService periodicalService;
@@ -28,23 +30,36 @@ public class JournalController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String role = auth.getAuthorities().toArray()[0].toString();
 		List<Journal> journals;
-		if (role.equals("ROLE_ADMIN") || role.equals("ROLE_USER")) {
+		if (role.equals("ROLE_USER")) {
 			User currentUser = (User) auth.getPrincipal();
 			journals = periodicalService.getJournals(currentUser);
 		} else {
 			journals = periodicalService.getJournals();
 		}
 		model.addAttribute("journals", journals);
-		return "journals";
+		return "/journals";
 	}
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	public String addMyJournal (@RequestParam Long currentId) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User currentUser = (User)auth.getPrincipal();
 		periodicalService.addMyChoice(currentId, currentUser);
 		return "redirect:/journals";
+	}
+
+	@RequestMapping(value = "/edit", method = RequestMethod.POST)
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public String editJournal (@ModelAttribute("journals") List<Journal> journals,
+							   @RequestParam Long currentId, RedirectAttributes attributes) {
+		Optional<Journal> journalOptional = journals.stream().filter(j -> j.getId_journal() == currentId).findAny();
+		if (journalOptional.isPresent()) {
+			attributes.addFlashAttribute("journalToEdit", journalOptional.get());
+			return "redirect:/editjournal";
+		} else {
+			return "/journals";
+		}
 	}
 
 }

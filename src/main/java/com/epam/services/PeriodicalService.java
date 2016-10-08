@@ -110,7 +110,7 @@ public class PeriodicalService {
         return BigDecimal.ZERO;
     }
 
-    public void pay(BigDecimal sum, User user) {
+    public void pay(BigDecimal sum, User user) throws Exception {
         if (sum.equals(sumToPay(user))) {
             List<Choice> choices = choiceDAO.getChoices(user.getId_user());
             if (!choices.isEmpty()) {
@@ -119,6 +119,8 @@ public class PeriodicalService {
                     choiceDAO.deleteChoice(choice.getId_choice());
                 }
             }
+        } else {
+            throw new Exception("Incorrect sum for payment");
         }
     }
 

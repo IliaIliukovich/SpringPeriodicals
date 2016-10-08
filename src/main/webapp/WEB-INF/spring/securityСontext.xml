@@ -23,7 +23,9 @@
 							 authentication-failure-url="/login?error=true"/>
 		<security:logout logout-url="/logout" logout-success-url="/login?logout=true"/>
 		<security:intercept-url pattern="/addjournal" access="hasRole('ROLE_ADMIN')"/>
-		<security:intercept-url pattern="/myjournals" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/editjournal" access="hasRole('ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/myjournals" access="hasRole('ROLE_USER')"/>
+		<security:intercept-url pattern="/journals/add" access="hasRole('ROLE_USER')"/>
 		<security:intercept-url pattern="/**" access="permitAll"/>
 		<security:remember-me key="rememberMe" user-service-ref="customUserDetailsService" />
 	</security:http>

@@ -23,7 +23,7 @@
 					</ul>
 				</li>
 
-				<sec:authorize access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')">
+				<sec:authorize access="hasRole('ROLE_USER')">
 					<li><a href="<spring:url value="/myjournals"/>">My journals</a></li>
 				</sec:authorize>
 

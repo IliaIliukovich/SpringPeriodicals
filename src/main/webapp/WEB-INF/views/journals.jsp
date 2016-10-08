@@ -3,10 +3,11 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Project Manager</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
@@ -19,7 +20,8 @@
 <body>
 
 <jsp:include page="../views/fragments/header.jsp"></jsp:include>
-<spring:url value="/journals/add" var="formUrl"/>
+<spring:url value="/journals/edit" var="editUrl"/>
+<spring:url value="/journals/add" var="addUrl"/>
 
 <div class="container">
 
@@ -35,19 +37,30 @@
                 <td>${journal.description}</td>
                 <td>${journal.price}</td>
                 <td>
+                    <sec:authorize access="hasRole('ROLE_ADMIN')" var="admin"/>
                     <c:choose>
-                        <c:when test="${journal.subscription == 'unsubscribed'}">
-                            <form:form action="${formUrl}" method="POST">
+                        <c:when test="${admin}">
+                            <form:form action="${editUrl}" method="POST">
+                                <input type="submit" value="edit"/>
                                 <input type="hidden" value="${journal.id_journal}" name="currentId">
-                                <input type="submit" value="add"/>
                             </form:form>
                         </c:when>
-                        <c:when test="${journal.subscription == 'chosen'}">
-                            added
-                        </c:when>
-                        <c:when test="${journal.subscription == 'subscribed'}">
-                            subscribed
-                        </c:when>
+                        <c:otherwise>
+                            <c:choose>
+                                <c:when test="${journal.subscription == 'unsubscribed'}">
+                                    <form:form action="${addUrl}" method="POST">
+                                        <input type="submit" value="add"/>
+                                        <input type="hidden" value="${journal.id_journal}" name="currentId">
+                                    </form:form>
+                                </c:when>
+                                <c:when test="${journal.subscription == 'chosen'}">
+                                    added
+                                </c:when>
+                                <c:when test="${journal.subscription == 'subscribed'}">
+                                    subscribed
+                                </c:when>
+                            </c:choose>
+                        </c:otherwise>
                     </c:choose>
                 </td>
             </tr>
