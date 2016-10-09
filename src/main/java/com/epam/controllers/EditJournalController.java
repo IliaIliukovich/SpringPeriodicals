@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import javax.validation.Valid;
 
 @Controller
@@ -29,10 +30,10 @@ public class EditJournalController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String editJournal(@Valid @ModelAttribute Journal journal, Errors errors){
-		System.out.println("edit post  " + journal);
+	public String editJournal(@Valid @ModelAttribute Journal journal, Errors errors, SessionStatus status){
 		if (!errors.hasErrors()) {
 			periodicalService.editJournal(journal);
+			status.setComplete();
 			return "redirect:/journals";
 		} else {
 			return "/editjournal";

@@ -117,7 +117,7 @@ public class PeriodicalService {
     }
 
     public void pay(BigDecimal sum, User user) {
-        if (sum.equals(sumToPay(user))) {
+        if (sum.compareTo(sumToPay(user)) == 0) {
             List<Choice> choices = choiceDAO.getChoices(user.getId_user());
             if (!choices.isEmpty()) {
                 for (Choice choice : choices) {

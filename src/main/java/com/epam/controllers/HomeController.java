@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
 import javax.validation.Valid;
 
@@ -38,11 +39,12 @@ public class HomeController {
 	}
 
 	@RequestMapping(value="/register", method=RequestMethod.POST)
-	public String register(@Valid @ModelAttribute User user, Errors errors){
+	public String register(@Valid @ModelAttribute User user, Errors errors, SessionStatus status){
 		if (!errors.hasErrors()) {
 			Authentication auth = new UsernamePasswordAuthenticationToken(user,
 					user.getPassword(), user.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(auth);
+			status.setComplete();
 			return "redirect:/";
 		} else {
 			return "/register";

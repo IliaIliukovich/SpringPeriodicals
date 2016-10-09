@@ -29,7 +29,7 @@
     <table class="table table-hover">
         <tbody>
         <tr>
-            <th>Journal name</th><th>Description</th><th>Price</th><th>Add to my list</th>
+            <th>Journal name</th><th>Description</th><th>Price</th><th>Action</th>
         </tr>
         <c:forEach items="${journals}" var="journal">
             <tr>

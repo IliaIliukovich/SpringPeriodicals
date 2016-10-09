@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `periodicals`.`journal` (
   `id_journal` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `description` TEXT NULL,
-  `price` DECIMAL NOT NULL,
+  `price` DECIMAL(9,2) NOT NULL,
   PRIMARY KEY (`id_journal`))
   ENGINE = InnoDB;
 

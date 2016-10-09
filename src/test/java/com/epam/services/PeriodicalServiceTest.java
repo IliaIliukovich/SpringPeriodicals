@@ -79,8 +79,8 @@ public class PeriodicalServiceTest {
     public void testSumToPay() throws Exception {
         periodicalService.addMyChoice(1L, user);
         periodicalService.addMyChoice(2L, user);
-        BigDecimal supToPay = periodicalService.sumToPay(user);
-        assertThat(supToPay, is(BigDecimal.valueOf(3500)));
+        BigDecimal sumToPay = periodicalService.sumToPay(user);
+        assertThat(sumToPay, is(BigDecimal.valueOf(350000, 2)));
     }
 
     @Test
