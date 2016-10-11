@@ -38,10 +38,10 @@ CREATE TABLE IF NOT EXISTS `periodicals`.`journal` (
 -- Table `periodicals`.`choice`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `periodicals`.`choice` (
-  `id_choice` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `id_user` INT NOT NULL,
   `id_journal` INT NOT NULL,
-  PRIMARY KEY (`id_choice`),
+  PRIMARY KEY (`id`),
   INDEX `fk_choice_id_user_idx` (`id_user` ASC),
   INDEX `fk_choice_id_journal_idx` (`id_journal` ASC),
   CONSTRAINT `fk_choice_id_user`
@@ -61,10 +61,10 @@ CREATE TABLE IF NOT EXISTS `periodicals`.`choice` (
 -- Table `periodicals`.`subscription`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `periodicals`.`subscription` (
-  `id_subscription` INT NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `id_user` INT NOT NULL,
   `id_journal` INT NOT NULL,
-  PRIMARY KEY (`id_subscription`),
+  PRIMARY KEY (`id`),
   INDEX `fk_subscription_id_user_idx` (`id_user` ASC),
   INDEX `fk_subscription_id_journal_idx` (`id_journal` ASC),
   CONSTRAINT `fk_subscription_id_user`

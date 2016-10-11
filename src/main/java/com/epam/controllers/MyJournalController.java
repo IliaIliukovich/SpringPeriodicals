@@ -1,6 +1,7 @@
 package com.epam.controllers;
 
 import com.epam.entities.Journal;
+import com.epam.entities.RelationTable;
 import com.epam.entities.User;
 import com.epam.services.PeriodicalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ public class MyJournalController {
 	public String getMyJournals(Model model){
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User currentUser = (User)auth.getPrincipal();
-		List<Journal> myChoiceJournals = periodicalService.getChoiceJournals(currentUser);
-		List<Journal> mySubscriptionJournals = periodicalService.getSubscriptionJournals(currentUser);
+		List<Journal> myChoiceJournals = periodicalService.getUserJournals(currentUser, RelationTable.CHOICE_TABLE);
+		List<Journal> mySubscriptionJournals = periodicalService.getUserJournals(currentUser, RelationTable.SUBSCRIPTION_TABLE);
 		BigDecimal sum = periodicalService.sumToPay(currentUser);
 		model.addAttribute("myChoiceJournals", myChoiceJournals);
 		model.addAttribute("mySubscriptionJournals", mySubscriptionJournals);
