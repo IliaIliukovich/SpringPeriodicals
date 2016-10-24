@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -33,11 +33,13 @@ public class PeriodicalService {
 
     public List<Journal> getJournals(User user) {
         List <Journal> journals = getJournals();
-        setJournalSubscription(journals, user);
+        journals = setJournalSubscription(journals, user);
         return journals;
     }
 
-    public void addNewJournal(Journal journal) { journalDAO.addJournal(journal); }
+    public void addNewJournal(Journal journal) {
+        journalDAO.addJournal(journal);
+    }
 
     public void editJournal(Journal journal) {
         if (journal.getId_journal() != null) {
@@ -64,19 +66,21 @@ public class PeriodicalService {
         }
     }
 
-    public List<Journal> getUserJournals(User user, String tableName) {
+    public List<List<Journal>> getUserJournals(User user) {
         List<Journal> journals = journalDAO.getJournals();
-        List<RelationTable> relations = relationTableDAO.getRelations(user.getId_user(), tableName);
-        List <Journal> userJournals = new LinkedList<>();
-        if (!relations.isEmpty()) {
-            relations.forEach(choice -> {
-                for (Journal journal : journals) {
-                    if (choice.getId_journal() == journal.getId_journal()) {
-                        userJournals.add(journal);
-                    }
-                }
-            });
+        List<RelationTable> choices = relationTableDAO.getRelations(user.getId_user(), RelationTable.CHOICE_TABLE);
+        List<RelationTable> subscriptions = relationTableDAO.getRelations(user.getId_user(), RelationTable.SUBSCRIPTION_TABLE);
+        List <List<Journal>> userJournals = new ArrayList<>();
+        List <Journal> userChoiceJournals = new ArrayList<>();
+        List <Journal> userSubscriptionJournals = new ArrayList<>();
+        if (!choices.isEmpty() || !subscriptions.isEmpty()) {
+            Journal[] journalArray = journals.toArray(new Journal[journals.size()]);
+            Arrays.sort(journalArray);
+            getSubscriptionJournals(choices, journalArray, userChoiceJournals);
+            getSubscriptionJournals(subscriptions, journalArray, userSubscriptionJournals);
         }
+        userJournals.add(userChoiceJournals);
+        userJournals.add(userSubscriptionJournals);
         return userJournals;
     }
 
@@ -110,23 +114,49 @@ public class PeriodicalService {
 
     public User getUser(String username) { return userDAO.getUser(username); }
 
-    private void setJournalSubscription(List<Journal> journals, User user) {
+    private List<Journal> setJournalSubscription(List<Journal> journals, User user) {
         if (user.getId_user() != null) {
             List<RelationTable> choices = relationTableDAO.getRelations(user.getId_user(), RelationTable.CHOICE_TABLE);
-            if (!choices.isEmpty()) {
-                choices.forEach(choice -> journals.forEach(journal -> {
-                    if (choice.getId_journal() == journal.getId_journal()) {
-                        journal.setSubscription("chosen");
-                    }
-                }));
-            }
             List<RelationTable> subscriptions = relationTableDAO.getRelations(user.getId_user(), RelationTable.SUBSCRIPTION_TABLE);
-            if (!subscriptions.isEmpty()) {
-                subscriptions.forEach(subscription -> journals.forEach(journal -> {
-                    if (subscription.getId_journal() == journal.getId_journal()) {
-                        journal.setSubscription("subscribed");
+            if (!choices.isEmpty() || !subscriptions.isEmpty()) {
+                Journal[] journalArray = journals.toArray(new Journal[journals.size()]);
+                Arrays.sort(journalArray);
+                setSubscription(choices, journalArray, Journal.CHOSEN);
+                setSubscription(subscriptions, journalArray, Journal.SUBSCRIBED);
+                journals = Arrays.asList(journalArray);
+            }
+        }
+        return journals;
+    }
+
+    private void setSubscription(List<RelationTable> relations, Journal[] journalArray, String message) {
+        if (!relations.isEmpty()) {
+            RelationTable[] relationsArray = relations.toArray(new RelationTable[relations.size()]);
+            Arrays.sort(relationsArray);
+            int firstInd = 0;
+            for (int i = 0; i < relationsArray.length; i++) {
+                for (int j = firstInd; j < journalArray.length; j++) {
+                    if (relationsArray[i].getId_journal() == journalArray[j].getId_journal()) {
+                        journalArray[j].setSubscription(message);
+                        firstInd = j + 1;
                     }
-                }));
+                }
+            }
+        }
+    }
+
+    private void getSubscriptionJournals(List<RelationTable> relations, Journal[] journalArray, List<Journal> userChoiceJournals) {
+        if (!relations.isEmpty()) {
+            RelationTable[] relationsArray = relations.toArray(new RelationTable[relations.size()]);
+            Arrays.sort(relationsArray);
+            int firstInd = 0;
+            for (int i = 0; i < relationsArray.length; i++) {
+                for (int j = firstInd; j < journalArray.length; j++) {
+                    if (relationsArray[i].getId_journal() == journalArray[j].getId_journal()) {
+                        userChoiceJournals.add(journalArray[j]);
+                        firstInd = j + 1;
+                    }
+                }
             }
         }
     }

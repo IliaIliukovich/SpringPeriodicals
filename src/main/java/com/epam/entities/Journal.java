@@ -7,7 +7,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class Journal {
+public class Journal implements Comparable<Journal> {
 
     private Long id_journal;
 
@@ -22,7 +22,11 @@ public class Journal {
     @DecimalMax(value = "1000000", message = "Nobody will bye such a journal! Max value {value}")
     private BigDecimal price;
 
-    private String subscription = "unsubscribed";
+    private String subscription = UNSUBSCRIBED;
+
+    public static final String CHOSEN = "chosen";
+    public static final String SUBSCRIBED = "subscribed";
+    public static final String UNSUBSCRIBED = "unsubscribed";
 
     public Journal() {
     }
@@ -83,5 +87,10 @@ public class Journal {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Journal that) {
+        return (int) (this.getId_journal() - that.getId_journal());
     }
 }

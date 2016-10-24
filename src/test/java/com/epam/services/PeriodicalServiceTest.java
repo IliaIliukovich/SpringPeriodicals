@@ -2,7 +2,6 @@ package com.epam.services;
 
 import com.epam.config.AppConfig;
 import com.epam.entities.Journal;
-import com.epam.entities.RelationTable;
 import com.epam.entities.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +51,7 @@ public class PeriodicalServiceTest {
     public  void testAddGetMyChoice() throws Exception {
         periodicalService.addMyChoice(1L, user);
         periodicalService.addMyChoice(2L, user);
-        List<Journal> choiceJournals = periodicalService.getUserJournals(user, RelationTable.CHOICE_TABLE);
+        List<Journal> choiceJournals = periodicalService.getUserJournals(user).get(0);
         assertThat(choiceJournals.size(), is(2));
     }
 
@@ -60,9 +59,9 @@ public class PeriodicalServiceTest {
     public  void testDeleteMyChoice() throws Exception {
         periodicalService.addMyChoice(1L, user);
         periodicalService.addMyChoice(2L, user);
-        List<Journal> choiceJournals = periodicalService.getUserJournals(user, RelationTable.CHOICE_TABLE);
+        List<Journal> choiceJournals = periodicalService.getUserJournals(user).get(0);
         periodicalService.deleteMyChoice(choiceJournals.get(0).getId_journal(), user);
-        List<Journal> choiceJournals2 = periodicalService.getUserJournals(user, RelationTable.CHOICE_TABLE);
+        List<Journal> choiceJournals2 = periodicalService.getUserJournals(user).get(0);
         assertThat(choiceJournals2.size(), is(1));
     }
 
@@ -72,7 +71,7 @@ public class PeriodicalServiceTest {
         periodicalService.addMyChoice(1L, user);
         periodicalService.addMyChoice(2L, user);
         periodicalService.pay(BigDecimal.valueOf(3500), user);
-        List<Journal> subscriptionJournals = periodicalService.getUserJournals(user, RelationTable.SUBSCRIPTION_TABLE);
+        List<Journal> subscriptionJournals = periodicalService.getUserJournals(user).get(1);
         assertThat(subscriptionJournals.size(), is(2));
     }
 
@@ -89,9 +88,9 @@ public class PeriodicalServiceTest {
         periodicalService.addMyChoice(1L, user);
         periodicalService.addMyChoice(2L, user);
         periodicalService.pay(BigDecimal.valueOf(3500), user);
-        List<Journal> subscriptionJournals = periodicalService.getUserJournals(user, RelationTable.SUBSCRIPTION_TABLE);
+        List<Journal> subscriptionJournals = periodicalService.getUserJournals(user).get(1);
         assertThat(subscriptionJournals.size(), is(2));
-        List<Journal> choiceJournals = periodicalService.getUserJournals(user, RelationTable.CHOICE_TABLE);
+        List<Journal> choiceJournals = periodicalService.getUserJournals(user).get(0);
         assertTrue(choiceJournals.isEmpty());
     }
 
