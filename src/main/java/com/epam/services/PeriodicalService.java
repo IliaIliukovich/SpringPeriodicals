@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 @Service
 @Transactional
@@ -67,18 +68,11 @@ public class PeriodicalService {
     }
 
     public List<List<Journal>> getUserJournals(User user) {
-        List<Journal> journals = journalDAO.getJournals();
-        List<RelationTable> choices = relationTableDAO.getRelations(user.getId_user(), RelationTable.CHOICE_TABLE);
-        List<RelationTable> subscriptions = relationTableDAO.getRelations(user.getId_user(), RelationTable.SUBSCRIPTION_TABLE);
-        List <List<Journal>> userJournals = new ArrayList<>();
         List <Journal> userChoiceJournals = new ArrayList<>();
         List <Journal> userSubscriptionJournals = new ArrayList<>();
-        if (!choices.isEmpty() || !subscriptions.isEmpty()) {
-            Journal[] journalArray = journals.toArray(new Journal[journals.size()]);
-            Arrays.sort(journalArray);
-            getSubscriptionJournals(choices, journalArray, userChoiceJournals);
-            getSubscriptionJournals(subscriptions, journalArray, userSubscriptionJournals);
-        }
+        List<Journal> journals = journalDAO.getJournals();
+        new GetUserJournals().set(journals, user, userChoiceJournals, userSubscriptionJournals);
+        List <List<Journal>> userJournals = new ArrayList<>();
         userJournals.add(userChoiceJournals);
         userJournals.add(userSubscriptionJournals);
         return userJournals;
@@ -116,48 +110,63 @@ public class PeriodicalService {
 
     private List<Journal> setJournalSubscription(List<Journal> journals, User user) {
         if (user.getId_user() != null) {
+           journals = new SetJournalSubscription().set(journals, user, null, null);
+        }
+        return journals;
+    }
+
+    private void journalRelationTemplate(List<RelationTable> relations, Journal[] journalArray,
+                                         List<Journal> userJournals, BiConsumer<List<Journal>,Journal> consumer) {
+        if (!relations.isEmpty()) {
+            RelationTable[] relationsArray = relations.toArray(new RelationTable[relations.size()]);
+            Arrays.sort(relationsArray);
+            int firstInd = 0;
+            for (int i = 0; i < relationsArray.length; i++) {
+                for (int j = firstInd; j < journalArray.length; j++) {
+                    if (relationsArray[i].getId_journal() == journalArray[j].getId_journal()) {
+                        consumer.accept(userJournals, journalArray[j]);
+                        firstInd = j + 1;
+                    }
+                }
+            }
+        }
+    }
+
+    abstract class SetJournalsTemplate {
+        final List<Journal> set(List<Journal> journals, User user, List <Journal> userChoiceJournals,
+                                        List <Journal> userSubscriptionJournals) {
             List<RelationTable> choices = relationTableDAO.getRelations(user.getId_user(), RelationTable.CHOICE_TABLE);
             List<RelationTable> subscriptions = relationTableDAO.getRelations(user.getId_user(), RelationTable.SUBSCRIPTION_TABLE);
             if (!choices.isEmpty() || !subscriptions.isEmpty()) {
                 Journal[] journalArray = journals.toArray(new Journal[journals.size()]);
                 Arrays.sort(journalArray);
-                setSubscription(choices, journalArray, Journal.CHOSEN);
-                setSubscription(subscriptions, journalArray, Journal.SUBSCRIBED);
-                journals = Arrays.asList(journalArray);
+                journals = action(choices, subscriptions, journalArray, userChoiceJournals, userSubscriptionJournals);
             }
+            return journals;
         }
-        return journals;
+        abstract List<Journal> action(List<RelationTable> choices, List<RelationTable> subscriptions,                                     Journal[] journalArray,
+                                      List <Journal> userChoiceJournals, List <Journal> userSubscriptionJournals);
     }
 
-    private void setSubscription(List<RelationTable> relations, Journal[] journalArray, String message) {
-        if (!relations.isEmpty()) {
-            RelationTable[] relationsArray = relations.toArray(new RelationTable[relations.size()]);
-            Arrays.sort(relationsArray);
-            int firstInd = 0;
-            for (int i = 0; i < relationsArray.length; i++) {
-                for (int j = firstInd; j < journalArray.length; j++) {
-                    if (relationsArray[i].getId_journal() == journalArray[j].getId_journal()) {
-                        journalArray[j].setSubscription(message);
-                        firstInd = j + 1;
-                    }
-                }
-            }
+    private class GetUserJournals extends SetJournalsTemplate {
+        @Override
+        List<Journal> action(List<RelationTable> choices, List<RelationTable> subscriptions, Journal[] journalArray,
+                             List <Journal> userChoiceJournals, List <Journal> userSubscriptionJournals) {
+            journalRelationTemplate(choices, journalArray, userChoiceJournals, List::add);
+            journalRelationTemplate(subscriptions, journalArray, userSubscriptionJournals, List::add);
+            return null;
         }
     }
 
-    private void getSubscriptionJournals(List<RelationTable> relations, Journal[] journalArray, List<Journal> userChoiceJournals) {
-        if (!relations.isEmpty()) {
-            RelationTable[] relationsArray = relations.toArray(new RelationTable[relations.size()]);
-            Arrays.sort(relationsArray);
-            int firstInd = 0;
-            for (int i = 0; i < relationsArray.length; i++) {
-                for (int j = firstInd; j < journalArray.length; j++) {
-                    if (relationsArray[i].getId_journal() == journalArray[j].getId_journal()) {
-                        userChoiceJournals.add(journalArray[j]);
-                        firstInd = j + 1;
-                    }
-                }
-            }
+    private class SetJournalSubscription extends SetJournalsTemplate {
+        @Override
+        List<Journal> action(List<RelationTable> choices, List<RelationTable> subscriptions, Journal[] journalArray,
+                             List <Journal> userChoiceJournals, List <Journal> userSubscriptionJournals) {
+            List<Journal> journals;
+            journalRelationTemplate(choices, journalArray, null, (t, u) -> {u.setSubscription(Journal.CHOSEN);});
+            journalRelationTemplate(subscriptions, journalArray, null, (t, u) -> {u.setSubscription(Journal.SUBSCRIBED);});
+            journals = Arrays.asList(journalArray);
+            return journals;
         }
     }
 
