@@ -1,6 +1,6 @@
 package com.epam.entities;
 
-public class RelationTable implements Comparable<RelationTable> {
+public class RelationTable {
 
     private long id;
     private long id_user;
@@ -34,10 +34,5 @@ public class RelationTable implements Comparable<RelationTable> {
                 ", id_user=" + id_user +
                 ", id_journal=" + id_journal +
                 '}';
-    }
-
-    @Override
-    public int compareTo(RelationTable that) {
-        return (int) (this.getId_journal() - that.getId_journal());
     }
 }

@@ -119,7 +119,6 @@ public class PeriodicalService {
                                          List<Journal> userJournals, BiConsumer<List<Journal>,Journal> consumer) {
         if (!relations.isEmpty()) {
             RelationTable[] relationsArray = relations.toArray(new RelationTable[relations.size()]);
-            Arrays.sort(relationsArray);
             int firstInd = 0;
             for (int i = 0; i < relationsArray.length; i++) {
                 for (int j = firstInd; j < journalArray.length; j++) {
@@ -139,7 +138,6 @@ public class PeriodicalService {
             List<RelationTable> subscriptions = relationTableDAO.getRelations(user.getId_user(), RelationTable.SUBSCRIPTION_TABLE);
             if (!choices.isEmpty() || !subscriptions.isEmpty()) {
                 Journal[] journalArray = journals.toArray(new Journal[journals.size()]);
-                Arrays.sort(journalArray);
                 journals = action(choices, subscriptions, journalArray, userChoiceJournals, userSubscriptionJournals);
             }
             return journals;
@@ -163,8 +161,8 @@ public class PeriodicalService {
         List<Journal> action(List<RelationTable> choices, List<RelationTable> subscriptions, Journal[] journalArray,
                              List <Journal> userChoiceJournals, List <Journal> userSubscriptionJournals) {
             List<Journal> journals;
-            journalRelationTemplate(choices, journalArray, null, (t, u) -> {u.setSubscription(Journal.CHOSEN);});
-            journalRelationTemplate(subscriptions, journalArray, null, (t, u) -> {u.setSubscription(Journal.SUBSCRIBED);});
+            journalRelationTemplate(choices, journalArray, null, (t, u) -> u.setSubscription(Journal.CHOSEN));
+            journalRelationTemplate(subscriptions, journalArray, null, (t, u) -> u.setSubscription(Journal.SUBSCRIBED));
             journals = Arrays.asList(journalArray);
             return journals;
         }

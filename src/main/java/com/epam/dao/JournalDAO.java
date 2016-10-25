@@ -26,7 +26,7 @@ public class JournalDAO {
     }
 
     public List<Journal> getJournals() {
-        String sqlTxt = "SELECT * FROM journal";
+        String sqlTxt = "SELECT * FROM journal ORDER BY id_journal";
         return template.query(sqlTxt, new JournalMapper());
     }
 

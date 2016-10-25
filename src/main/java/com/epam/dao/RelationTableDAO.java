@@ -21,13 +21,8 @@ public class RelationTableDAO {
     }
 
     public List<RelationTable> getRelations(Long id_user, String tableName) {
-        String sqlTxt = "SELECT * FROM " + tableName + " WHERE id_user=?";
+        String sqlTxt = "SELECT * FROM " + tableName + " WHERE id_user=? ORDER BY id_journal";
         return template.query(sqlTxt, new RelationTableMapper(), id_user);
-    }
-
-    public RelationTable getRelation(Long id, String tableName) {
-        String sqlTxt = "SELECT * FROM " + tableName + " WHERE id=?";
-        return template.queryForObject(sqlTxt, new RelationTableMapper(), id);
     }
 
     public void addRelation(RelationTable relation, String tableName) {

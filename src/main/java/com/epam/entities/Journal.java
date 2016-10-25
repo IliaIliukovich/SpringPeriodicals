@@ -7,7 +7,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class Journal implements Comparable<Journal> {
+public class Journal {
 
     private Long id_journal;
 
@@ -87,10 +87,5 @@ public class Journal implements Comparable<Journal> {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 '}';
-    }
-
-    @Override
-    public int compareTo(Journal that) {
-        return (int) (this.getId_journal() - that.getId_journal());
     }
 }
