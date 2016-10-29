@@ -51,6 +51,11 @@ public class HomeController {
 		}
 	}
 
+	@RequestMapping("/error404")
+	public String error404(){
+		return "/error404";
+	}
+
 	@ModelAttribute("user")
 	public User getUser(){
 		return new User();
