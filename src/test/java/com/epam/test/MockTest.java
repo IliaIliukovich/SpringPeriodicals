@@ -9,6 +9,7 @@ public class MockTest {
     @Test
     public  void testGetJournals() throws Exception {
         assertThat(true, is(true));
+        assertThat(true, is(false));
     }
 
 }
