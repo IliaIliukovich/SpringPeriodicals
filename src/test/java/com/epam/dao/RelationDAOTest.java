@@ -1,6 +1,6 @@
 package com.epam.dao;
 
-import com.epam.config.AppConfig;
+import com.epam.config.TestAppConfig;
 import com.epam.entities.RelationTable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +13,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = AppConfig.class)
+@ContextConfiguration(classes = TestAppConfig.class)
 @Transactional
 public class RelationDAOTest {
 

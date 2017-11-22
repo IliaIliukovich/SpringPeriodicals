@@ -1,6 +1,6 @@
 package com.epam.services;
 
-import com.epam.config.AppConfig;
+import com.epam.config.TestAppConfig;
 import com.epam.entities.Journal;
 import com.epam.entities.User;
 import org.junit.Before;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = AppConfig.class)
+@ContextConfiguration(classes = TestAppConfig.class)
 @Transactional
 public class PeriodicalServiceTest {
 
