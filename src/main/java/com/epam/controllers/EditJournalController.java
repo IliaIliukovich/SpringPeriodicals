@@ -32,7 +32,7 @@ public class EditJournalController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String editJournal(@Valid @ModelAttribute Journal journal, Errors errors, SessionStatus status){
 		if (!errors.hasErrors()) {
-			periodicalService.editJournal(journal);
+			periodicalService.createOrUpdate(journal);
 			status.setComplete();
 			return "redirect:/journals";
 		} else {

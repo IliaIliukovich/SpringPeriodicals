@@ -2,6 +2,7 @@ package com.epam.dao;
 
 import com.epam.config.TestAppConfig;
 import com.epam.entities.Journal;
+import com.epam.repository.JournalRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,38 +20,38 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestAppConfig.class)
 @Transactional
-public class JournalDAOTest {
+public class JournalRepositoryTest {
 
     @Autowired
-    private JournalDAO dao;
+    private JournalRepository repository;
 
     @Test
     public void testGetJornal() throws Exception {
-        Journal journal = dao.getJournalbyId(1L);
+        Journal journal = repository.findOne(1L);
         assertThat(journal.getName(), is("STRF.ru"));
     }
 
     @Test
     public void testGetAllJournals() throws Exception {
-        List<Journal> journals = dao.getJournals();
+        List<Journal> journals = repository.findAll();
         assertThat(journals, is(notNullValue()));
     }
 
     @Test
     public  void addNewJournal() throws Exception {
-        Journal journal = new Journal(1L,"test", "la-la-la", BigDecimal.valueOf(1777));
-        dao.addJournal(journal);
-        List<Journal> journals = dao.getJournals();
+        Journal journal = new Journal(null,"test", "la-la-la", BigDecimal.valueOf(1777));
+        repository.save(journal);
+        List<Journal> journals = repository.findAll();
         assertThat(journals.size(), is(9));
     }
 
     @Test
     public  void editJournal() throws Exception {
-        Journal journalBeforeTest = dao.getJournalbyId(1L);
+        Journal journalBeforeTest = repository.findOne(1L);
         assertThat(journalBeforeTest.getDescription(), is(not("la-la-la")));
         Journal journal = new Journal(1L,"test", "la-la-la", BigDecimal.valueOf(1777));
-        dao.editJournal(journal);
-        Journal journalAfterTest = dao.getJournalbyId(1L);
+        repository.save(journal);
+        Journal journalAfterTest = repository.findOne(1L);
         assertThat(journalAfterTest.getDescription(), is("la-la-la"));
     }
 

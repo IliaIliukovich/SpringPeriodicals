@@ -27,7 +27,7 @@ public class AddJournalController {
 	@RequestMapping(method = RequestMethod.POST)
 	public String addNewJournal(@Valid @ModelAttribute Journal journal, Errors errors, SessionStatus status){
 		if (!errors.hasErrors()) {
-			periodicalService.addNewJournal(journal);
+			periodicalService.createOrUpdate(journal);
 			status.setComplete();
 			return "redirect:/addjournal";
 		} else {

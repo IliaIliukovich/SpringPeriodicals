@@ -1,7 +1,6 @@
 package com.epam.services;
 
 import com.epam.dao.RelationTableDAO;
-import com.epam.dao.JournalDAO;
 import com.epam.dao.UserDAO;
 import com.epam.entities.*;
 import com.epam.repository.JournalRepository;
@@ -18,14 +17,12 @@ import java.util.function.BiConsumer;
 @Transactional
 public class PeriodicalService {
 
-    private final JournalDAO journalDAO;
     private final JournalRepository journalRepository;
     private final RelationTableDAO relationTableDAO;
     private final UserDAO userDAO;
 
     @Autowired
-    public PeriodicalService(JournalDAO journalDAO, RelationTableDAO relationTableDAO, UserDAO userDAO, JournalRepository journalRepository) {
-        this.journalDAO = journalDAO;
+    public PeriodicalService(RelationTableDAO relationTableDAO, UserDAO userDAO, JournalRepository journalRepository) {
         this.relationTableDAO = relationTableDAO;
         this.userDAO = userDAO;
         this.journalRepository = journalRepository;
@@ -41,18 +38,12 @@ public class PeriodicalService {
         return journals;
     }
 
-    public void addNewJournal(Journal journal) {
-        journalDAO.addJournal(journal);
-    }
-
-    public void editJournal(Journal journal) {
-        if (journal.getId_journal() != null) {
-            journalDAO.editJournal(journal);
-        }
+    public void createOrUpdate(Journal journal) {
+        journalRepository.save(journal);
     }
 
     public void addMyChoice(Long id_journal, User user) {
-        Journal journalById = journalDAO.getJournalbyId(id_journal);
+        Journal journalById = journalRepository.findOne(id_journal);
         if (journalById != null) {
             RelationTable relationTable = new RelationTable(1L, user.getId_user(), journalById.getId_journal());
             relationTableDAO.addRelation(relationTable, RelationTable.CHOICE_TABLE);
@@ -73,7 +64,7 @@ public class PeriodicalService {
     public List<List<Journal>> getUserJournals(User user) {
         List <Journal> userChoiceJournals = new ArrayList<>();
         List <Journal> userSubscriptionJournals = new ArrayList<>();
-        List<Journal> journals = journalDAO.getJournals();
+        List<Journal> journals = journalRepository.findAll();
         new GetUserJournals().set(journals, user, userChoiceJournals, userSubscriptionJournals);
         List <List<Journal>> userJournals = new ArrayList<>();
         userJournals.add(userChoiceJournals);
@@ -85,7 +76,7 @@ public class PeriodicalService {
         List<RelationTable> choices = relationTableDAO.getRelations(user.getId_user(), RelationTable.CHOICE_TABLE);
         if (!choices.isEmpty()) {
             List<Journal> journalList = new ArrayList<>();
-            choices.forEach(choice -> journalList.add(journalDAO.getJournalbyId((choice.getId_journal()))));
+            choices.forEach(choice -> journalList.add(journalRepository.findOne((choice.getId_journal()))));
             BigDecimal sum = BigDecimal.ZERO;
             for (Journal journal : journalList) {
                 sum = sum.add(journal.getPrice());

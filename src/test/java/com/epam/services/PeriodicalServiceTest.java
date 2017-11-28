@@ -42,7 +42,7 @@ public class PeriodicalServiceTest {
 
     @Test
     public  void testAddNewJournal() throws Exception {
-        periodicalService.addNewJournal(new Journal(1L, "Nachalo1", "la-la-la", BigDecimal.valueOf(1500)));
+        periodicalService.createOrUpdate(new Journal(null, "Nachalo1", "la-la-la", BigDecimal.valueOf(1500)));
         List<Journal> journals = periodicalService.getJournals();
         assertThat(journals.size(), is(9));
     }
