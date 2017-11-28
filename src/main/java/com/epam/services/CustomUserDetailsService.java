@@ -1,6 +1,6 @@
 package com.epam.services;
 
-import com.epam.dao.UserDAO;
+import com.epam.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,16 +11,16 @@ import org.springframework.stereotype.Component;
 @Component("customUserDetailsService")
 public class CustomUserDetailsService implements UserDetailsService {
 
-	private final UserDAO dao;
+	private final UserRepository repository;
 
 	@Autowired
-	public CustomUserDetailsService(UserDAO dao) {
-		this.dao = dao;
+	public CustomUserDetailsService(UserRepository repository) {
+		this.repository = repository;
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return dao.getUser(username);
+		return repository.findByUsername(username);
 	}
 
 }

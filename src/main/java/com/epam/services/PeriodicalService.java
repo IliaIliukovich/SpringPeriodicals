@@ -1,9 +1,9 @@
 package com.epam.services;
 
 import com.epam.dao.RelationTableDAO;
-import com.epam.dao.UserDAO;
 import com.epam.entities.*;
 import com.epam.repository.JournalRepository;
+import com.epam.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +19,12 @@ public class PeriodicalService {
 
     private final JournalRepository journalRepository;
     private final RelationTableDAO relationTableDAO;
-    private final UserDAO userDAO;
+    private final UserRepository userRepository;
 
     @Autowired
-    public PeriodicalService(RelationTableDAO relationTableDAO, UserDAO userDAO, JournalRepository journalRepository) {
+    public PeriodicalService(RelationTableDAO relationTableDAO, UserRepository userRepository, JournalRepository journalRepository) {
         this.relationTableDAO = relationTableDAO;
-        this.userDAO = userDAO;
+        this.userRepository = userRepository;
         this.journalRepository = journalRepository;
     }
 
@@ -98,9 +98,9 @@ public class PeriodicalService {
         }
     }
 
-    public void createUser(User user) { userDAO.createUser(user); }
+    public void createUser(User user) { userRepository.save(user); }
 
-    public User getUser(String username) { return userDAO.getUser(username); }
+    public User getUser(String username) { return userRepository.findByUsername(username); }
 
     private List<Journal> setJournalSubscription(List<Journal> journals, User user) {
         if (user.getId_user() != null) {

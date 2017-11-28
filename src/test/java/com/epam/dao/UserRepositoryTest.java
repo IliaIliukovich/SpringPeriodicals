@@ -2,6 +2,7 @@ package com.epam.dao;
 
 import com.epam.config.TestAppConfig;
 import com.epam.entities.User;
+import com.epam.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,22 +16,22 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestAppConfig.class)
 @Transactional
-public class UserDAOTest {
+public class UserRepositoryTest {
 
     @Autowired
-    private UserDAO dao;
+    private UserRepository repository;
 
     @Test
     public void testGetUser() throws Exception {
-        User user = dao.getUser("admin");
+        User user = repository.findByUsername("admin");
         assertThat(user.getPassword(), is("9dddec223b46691738e5e25d671b306d0442c2c6372492fb794f259526399b7d6d8f42657fcbcf1b"));
     }
 
     @Test
     public  void addNewUser() throws Exception {
-        User user = new User(1L, "tom2", "la-la-la", "ROLE_USER");
-        dao.createUser(user);
-        User user2 = dao.getUser("tom2");
+        User user = new User(null, "tom2", "la-la-la", "ROLE_USER");
+        repository.save(user);
+        User user2 = repository.findByUsername("tom2");
         assertThat(user2.getUsername(), is(user.getUsername()));
     }
 

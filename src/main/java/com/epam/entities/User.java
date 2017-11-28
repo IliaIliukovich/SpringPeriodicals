@@ -3,13 +3,19 @@ package com.epam.entities;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
 import java.util.Collection;
 
+@Entity
 public class User implements UserDetails {
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id_user;
     private String username;
     private String password;
+    @Transient
     private String passwordForConfirmation;
     private String role;
 
