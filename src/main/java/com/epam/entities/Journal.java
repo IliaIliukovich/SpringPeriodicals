@@ -2,13 +2,18 @@ package com.epam.entities;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
+
+import javax.persistence.*;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
+@Entity
 public class Journal {
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id_journal;
 
     @NotBlank(message = "Please, enter name")
@@ -22,6 +27,7 @@ public class Journal {
     @DecimalMax(value = "1000000", message = "Nobody will bye such a journal! Max value {value}")
     private BigDecimal price;
 
+    @Transient
     private String subscription = UNSUBSCRIBED;
 
     public static final String CHOSEN = "chosen";

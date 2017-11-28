@@ -4,6 +4,7 @@ import com.epam.dao.RelationTableDAO;
 import com.epam.dao.JournalDAO;
 import com.epam.dao.UserDAO;
 import com.epam.entities.*;
+import com.epam.repository.JournalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,18 +19,20 @@ import java.util.function.BiConsumer;
 public class PeriodicalService {
 
     private final JournalDAO journalDAO;
+    private final JournalRepository journalRepository;
     private final RelationTableDAO relationTableDAO;
     private final UserDAO userDAO;
 
     @Autowired
-    public PeriodicalService(JournalDAO journalDAO, RelationTableDAO relationTableDAO, UserDAO userDAO) {
+    public PeriodicalService(JournalDAO journalDAO, RelationTableDAO relationTableDAO, UserDAO userDAO, JournalRepository journalRepository) {
         this.journalDAO = journalDAO;
         this.relationTableDAO = relationTableDAO;
         this.userDAO = userDAO;
+        this.journalRepository = journalRepository;
     }
 
     public List<Journal> getJournals() {
-        return journalDAO.getJournals();
+        return journalRepository.findAll();
     }
 
     public List<Journal> getJournals(User user) {
