@@ -47,16 +47,16 @@
                         </c:when>
                         <c:otherwise>
                             <c:choose>
-                                <c:when test="${journal.subscription == 'unsubscribed'}">
+                                <c:when test="${journal.subscription.name() == 'UNSUBSCRIBED'}">
                                     <form:form action="${addUrl}" method="POST">
                                         <input type="submit" value="add"/>
                                         <input type="hidden" value="${journal.id_journal}" name="currentId">
                                     </form:form>
                                 </c:when>
-                                <c:when test="${journal.subscription == 'chosen'}">
+                                <c:when test="${journal.subscription.name() == 'CHOSEN'}">
                                     added
                                 </c:when>
-                                <c:when test="${journal.subscription == 'subscribed'}">
+                                <c:when test="${journal.subscription.name() == 'SUBSCRIBED'}">
                                     subscribed
                                 </c:when>
                             </c:choose>

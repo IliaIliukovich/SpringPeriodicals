@@ -28,11 +28,7 @@ public class Journal {
     private BigDecimal price;
 
     @Transient
-    private String subscription = UNSUBSCRIBED;
-
-    public static final String CHOSEN = "chosen";
-    public static final String SUBSCRIBED = "subscribed";
-    public static final String UNSUBSCRIBED = "unsubscribed";
+    private Subscription subscription = Subscription.UNSUBSCRIBED;
 
     public Journal() {
     }
@@ -61,7 +57,7 @@ public class Journal {
         return price;
     }
 
-    public String getSubscription() {
+    public Subscription getSubscription() {
         return subscription;
     }
 
@@ -81,7 +77,7 @@ public class Journal {
         this.price = price;
     }
 
-    public void setSubscription(String subscription) {
+    public void setSubscription(Subscription subscription) {
         this.subscription = subscription;
     }
 
@@ -93,5 +89,11 @@ public class Journal {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 '}';
+    }
+
+    public enum Subscription {
+        SUBSCRIBED,
+        UNSUBSCRIBED,
+        CHOSEN,
     }
 }

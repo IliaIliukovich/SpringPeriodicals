@@ -164,8 +164,8 @@ public class PeriodicalService {
         List<Journal> action(List<RelationTable> choices, List<RelationTable> subscriptions, Journal[] journalArray,
                              List <Journal> userChoiceJournals, List <Journal> userSubscriptionJournals) {
             List<Journal> journals;
-            journalRelationTemplate(choices, journalArray, null, (t, u) -> u.setSubscription(Journal.CHOSEN));
-            journalRelationTemplate(subscriptions, journalArray, null, (t, u) -> u.setSubscription(Journal.SUBSCRIBED));
+            journalRelationTemplate(choices, journalArray, null, (t, u) -> u.setSubscription(Journal.Subscription.CHOSEN));
+            journalRelationTemplate(subscriptions, journalArray, null, (t, u) -> u.setSubscription(Journal.Subscription.SUBSCRIBED));
             journals = Arrays.asList(journalArray);
             return journals;
         }
