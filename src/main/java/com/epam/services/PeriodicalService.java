@@ -32,13 +32,8 @@ public class PeriodicalService {
         this.userRepository = userRepository;
     }
 
-
-    public List<Journal> getJournals() {
-        return journalRepository.findAll();
-    }
-
     public List<Journal> getJournals(User user) {
-        List <Journal> journals = getJournals();
+        List <Journal> journals = journalRepository.findAll();
         journals = setJournalSubscription(journals, user);
         return journals;
     }
@@ -48,11 +43,7 @@ public class PeriodicalService {
     }
 
     public void addMyChoice(Long id_journal, User user) {
-        Journal journalById = journalRepository.findOne(id_journal);
-        if (journalById != null) {
-            Choice choice = new Choice(null, user.getId_user(), journalById.getId_journal());
-            choiceRepository.save(choice);
-        }
+        choiceRepository.save(new Choice(null, user.getId_user(), id_journal));
     }
 
     public void deleteMyChoice(Long id_journal, User user) {
@@ -108,7 +99,7 @@ public class PeriodicalService {
     public User getUser(String username) { return userRepository.findByUsername(username); }
 
     private List<Journal> setJournalSubscription(List<Journal> journals, User user) {
-        if (user.getId_user() != null) {
+        if (user != null && user.getId_user() != null) {
            journals = new SetJournalSubscription().set(journals, user, null, null);
         }
         return journals;

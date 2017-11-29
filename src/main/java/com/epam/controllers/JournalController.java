@@ -34,7 +34,7 @@ public class JournalController {
 			User currentUser = (User) auth.getPrincipal();
 			journals = periodicalService.getJournals(currentUser);
 		} else {
-			journals = periodicalService.getJournals();
+			journals = periodicalService.getJournals(null);
 		}
 		model.addAttribute("journals", journals);
 		return "/journals";

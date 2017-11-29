@@ -15,6 +15,8 @@ public abstract class RelationTable {
     @Column(name = "id_journal")
     private long idJournal;
 
+    public RelationTable() {}
+
     public RelationTable(Long id, long idUser, long idJournal) {
         this.id = id;
         this.idUser = idUser;

@@ -34,7 +34,7 @@ public class PeriodicalServiceTest {
 
     @Test
     public  void testGetJournals() throws Exception {
-        List<Journal> journals = periodicalService.getJournals();
+        List<Journal> journals = periodicalService.getJournals(null);
         assertThat(journals, is(notNullValue()));
         List<Journal> journals2 = periodicalService.getJournals(user);
         assertThat(journals2, is(notNullValue()));
@@ -43,7 +43,7 @@ public class PeriodicalServiceTest {
     @Test
     public  void testAddNewJournal() throws Exception {
         periodicalService.createOrUpdate(new Journal(null, "Nachalo1", "la-la-la", BigDecimal.valueOf(1500)));
-        List<Journal> journals = periodicalService.getJournals();
+        List<Journal> journals = periodicalService.getJournals(null);
         assertThat(journals.size(), is(9));
     }
 
