@@ -1,8 +1,9 @@
 package com.epam.services;
 
-import com.epam.dao.RelationTableDAO;
 import com.epam.entities.*;
+import com.epam.repository.ChoiceRepository;
 import com.epam.repository.JournalRepository;
+import com.epam.repository.SubscriptionRepository;
 import com.epam.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,15 +19,19 @@ import java.util.function.BiConsumer;
 public class PeriodicalService {
 
     private final JournalRepository journalRepository;
-    private final RelationTableDAO relationTableDAO;
+    private final ChoiceRepository choiceRepository;
+    private final SubscriptionRepository subscriptionRepository;
     private final UserRepository userRepository;
 
     @Autowired
-    public PeriodicalService(RelationTableDAO relationTableDAO, UserRepository userRepository, JournalRepository journalRepository) {
-        this.relationTableDAO = relationTableDAO;
-        this.userRepository = userRepository;
+    public PeriodicalService(JournalRepository journalRepository, ChoiceRepository choiceRepository,
+                             SubscriptionRepository subscriptionRepository, UserRepository userRepository) {
         this.journalRepository = journalRepository;
+        this.choiceRepository = choiceRepository;
+        this.subscriptionRepository = subscriptionRepository;
+        this.userRepository = userRepository;
     }
+
 
     public List<Journal> getJournals() {
         return journalRepository.findAll();
@@ -45,17 +50,17 @@ public class PeriodicalService {
     public void addMyChoice(Long id_journal, User user) {
         Journal journalById = journalRepository.findOne(id_journal);
         if (journalById != null) {
-            RelationTable relationTable = new RelationTable(1L, user.getId_user(), journalById.getId_journal());
-            relationTableDAO.addRelation(relationTable, RelationTable.CHOICE_TABLE);
+            Choice choice = new Choice(null, user.getId_user(), journalById.getId_journal());
+            choiceRepository.save(choice);
         }
     }
 
     public void deleteMyChoice(Long id_journal, User user) {
-        List<RelationTable> choices = relationTableDAO.getRelations(user.getId_user(), RelationTable.CHOICE_TABLE);
+        List<Choice> choices = choiceRepository.findByIdUser(user.getId_user());
         if (!choices.isEmpty()) {
             choices.forEach(choice -> {
-                if (choice.getId_journal() == id_journal) {
-                    relationTableDAO.deleteRelation(choice.getId(), RelationTable.CHOICE_TABLE);
+                if (choice.getIdJournal() == id_journal) {
+                    choiceRepository.delete(choice.getId());
                 }
             });
         }
@@ -73,10 +78,10 @@ public class PeriodicalService {
     }
 
     public BigDecimal sumToPay(User user) {
-        List<RelationTable> choices = relationTableDAO.getRelations(user.getId_user(), RelationTable.CHOICE_TABLE);
+        List<Choice> choices = choiceRepository.findByIdUser(user.getId_user());
         if (!choices.isEmpty()) {
             List<Journal> journalList = new ArrayList<>();
-            choices.forEach(choice -> journalList.add(journalRepository.findOne((choice.getId_journal()))));
+            choices.forEach(choice -> journalList.add(journalRepository.findOne((choice.getIdJournal()))));
             BigDecimal sum = BigDecimal.ZERO;
             for (Journal journal : journalList) {
                 sum = sum.add(journal.getPrice());
@@ -88,11 +93,11 @@ public class PeriodicalService {
 
     public void pay(BigDecimal sum, User user) {
         if (sum.compareTo(sumToPay(user)) == 0) {
-            List<RelationTable> choices = relationTableDAO.getRelations(user.getId_user(), RelationTable.CHOICE_TABLE);
+            List<Choice> choices = choiceRepository.findByIdUser(user.getId_user());
             if (!choices.isEmpty()) {
                 for (RelationTable choice : choices) {
-                    relationTableDAO.addRelation(new RelationTable(1L, user.getId_user(), choice.getId_journal()), RelationTable.SUBSCRIPTION_TABLE);
-                    relationTableDAO.deleteRelation(choice.getId(), RelationTable.CHOICE_TABLE);
+                    subscriptionRepository.save(new Subscription(null, user.getId_user(), choice.getIdJournal()));
+                    choiceRepository.delete(choice.getId());
                 }
             }
         }
@@ -109,14 +114,14 @@ public class PeriodicalService {
         return journals;
     }
 
-    private void journalRelationTemplate(List<RelationTable> relations, Journal[] journalArray,
+    private void journalRelationTemplate(List<? extends RelationTable> relations, Journal[] journalArray,
                                          List<Journal> userJournals, BiConsumer<List<Journal>,Journal> consumer) {
         if (!relations.isEmpty()) {
             RelationTable[] relationsArray = relations.toArray(new RelationTable[relations.size()]);
             int firstInd = 0;
             for (int i = 0; i < relationsArray.length; i++) {
                 for (int j = firstInd; j < journalArray.length; j++) {
-                    if (relationsArray[i].getId_journal() == journalArray[j].getId_journal()) {
+                    if (relationsArray[i].getIdJournal() == journalArray[j].getId_journal()) {
                         consumer.accept(userJournals, journalArray[j]);
                         firstInd = j + 1;
                     }
@@ -128,21 +133,21 @@ public class PeriodicalService {
     abstract class SetJournalsTemplate {
         final List<Journal> set(List<Journal> journals, User user, List <Journal> userChoiceJournals,
                                         List <Journal> userSubscriptionJournals) {
-            List<RelationTable> choices = relationTableDAO.getRelations(user.getId_user(), RelationTable.CHOICE_TABLE);
-            List<RelationTable> subscriptions = relationTableDAO.getRelations(user.getId_user(), RelationTable.SUBSCRIPTION_TABLE);
+            List<Choice> choices = choiceRepository.findByIdUser(user.getId_user());
+            List<Subscription> subscriptions = subscriptionRepository.findByIdUser(user.getId_user());
             if (!choices.isEmpty() || !subscriptions.isEmpty()) {
                 Journal[] journalArray = journals.toArray(new Journal[journals.size()]);
                 journals = action(choices, subscriptions, journalArray, userChoiceJournals, userSubscriptionJournals);
             }
             return journals;
         }
-        abstract List<Journal> action(List<RelationTable> choices, List<RelationTable> subscriptions,                                     Journal[] journalArray,
+        abstract List<Journal> action(List<Choice> choices, List<Subscription> subscriptions,                                     Journal[] journalArray,
                                       List <Journal> userChoiceJournals, List <Journal> userSubscriptionJournals);
     }
 
     private class GetUserJournals extends SetJournalsTemplate {
         @Override
-        List<Journal> action(List<RelationTable> choices, List<RelationTable> subscriptions, Journal[] journalArray,
+        List<Journal> action(List<Choice> choices, List<Subscription> subscriptions, Journal[] journalArray,
                              List <Journal> userChoiceJournals, List <Journal> userSubscriptionJournals) {
             journalRelationTemplate(choices, journalArray, userChoiceJournals, List::add);
             journalRelationTemplate(subscriptions, journalArray, userSubscriptionJournals, List::add);
@@ -152,7 +157,7 @@ public class PeriodicalService {
 
     private class SetJournalSubscription extends SetJournalsTemplate {
         @Override
-        List<Journal> action(List<RelationTable> choices, List<RelationTable> subscriptions, Journal[] journalArray,
+        List<Journal> action(List<Choice> choices, List<Subscription> subscriptions, Journal[] journalArray,
                              List <Journal> userChoiceJournals, List <Journal> userSubscriptionJournals) {
             List<Journal> journals;
             journalRelationTemplate(choices, journalArray, null, (t, u) -> u.setSubscription(Journal.Subscription.CHOSEN));

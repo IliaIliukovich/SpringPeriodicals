@@ -1,38 +1,47 @@
 package com.epam.entities;
 
-public class RelationTable {
+import javax.persistence.*;
 
-    private long id;
-    private long id_user;
-    private long id_journal;
+@MappedSuperclass
+@Inheritance(strategy= InheritanceType.TABLE_PER_CLASS)
+public abstract class RelationTable {
 
-    public static final String CHOICE_TABLE = "choice";
-    public static final String SUBSCRIPTION_TABLE = "subscription";
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private Long id;
 
-    public RelationTable(long id, long id_user, long id_journal) {
+    @Column(name = "id_user")
+    private long idUser;
+    @Column(name = "id_journal")
+    private long idJournal;
+
+    public RelationTable(Long id, long idUser, long idJournal) {
         this.id = id;
-        this.id_user = id_user;
-        this.id_journal = id_journal;
+        this.idUser = idUser;
+        this.idJournal = idJournal;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public long getId_user() {
-        return id_user;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public long getId_journal() {
-        return id_journal;
+    public long getIdUser() {
+        return idUser;
     }
 
-    @Override
-    public String toString() {
-        return "RelationTable{" +
-                "id=" + id +
-                ", id_user=" + id_user +
-                ", id_journal=" + id_journal +
-                '}';
+    public void setIdUser(long idUser) {
+        this.idUser = idUser;
+    }
+
+    public long getIdJournal() {
+        return idJournal;
+    }
+
+    public void setIdJournal(long idJournal) {
+        this.idJournal = idJournal;
     }
 }
