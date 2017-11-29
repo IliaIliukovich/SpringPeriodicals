@@ -12,5 +12,7 @@ public interface ChoiceRepository extends JpaRepository<Choice, Long> {
 
     Optional<Choice> findByIdUserAndIdJournal(long idUser, long idJournal);
 
+    void deleteByIdAndIdUser (Long id, long idUser);
+
 
 }

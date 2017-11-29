@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -40,10 +40,16 @@ public class PeriodicalService {
                 Optional<Choice> choice = choiceRepository.findByIdUserAndIdJournal(user.getId_user(), journal.getId_journal());
                 if (choice.isPresent()) {
                     journal.setState(Journal.State.CHOSEN);
+                    journal.setRelationalTableId(choice.get().getId());
                 } else {
-                    subscriptionRepository.findByIdUserAndIdJournal(user.getId_user(), journal.getId_journal()).ifPresent(e -> {
+                    Optional<Subscription> subscription = subscriptionRepository.findByIdUserAndIdJournal(user.getId_user(), journal.getId_journal());
+                    if (subscription.isPresent()) {
                         journal.setState(Journal.State.SUBSCRIBED);
-                    });
+                        journal.setRelationalTableId(subscription.get().getId());
+                    } else {
+                        journal.setState(Journal.State.UNSUBSCRIBED);
+                        journal.setRelationalTableId(0);
+                    }
                 }
             });
         }
@@ -58,20 +64,17 @@ public class PeriodicalService {
         choiceRepository.save(new Choice(null, user.getId_user(), id_journal));
     }
 
-    public void deleteMyChoice(Long id_journal, User user) {
-        choiceRepository.findByIdUserAndIdJournal(user.getId_user(), id_journal).ifPresent(choice -> {
-            choiceRepository.delete(choice.getId());
-        });
+    public void deleteMyChoice(Long id, User user) {
+        choiceRepository.deleteByIdAndIdUser(id, user.getId_user());
     }
 
     public List<List<Journal>> getUserJournals(User user) {
-        List <Journal> userChoiceJournals = new ArrayList<>();
-        List <Journal> userSubscriptionJournals = new ArrayList<>();
-        List<Journal> journals = journalRepository.findAll();
-        new GetUserJournals().set(journals, user, userChoiceJournals, userSubscriptionJournals);
+        List<Journal> journals = getJournals(user);
+        List <Journal> choiceJournals = journals.stream().filter(e -> e.getState() == Journal.State.CHOSEN).collect(Collectors.toList());
+        List <Journal> subscriptionJournals = journals.stream().filter(e -> e.getState() == Journal.State.SUBSCRIBED).collect(Collectors.toList());
         List <List<Journal>> userJournals = new ArrayList<>();
-        userJournals.add(userChoiceJournals);
-        userJournals.add(userSubscriptionJournals);
+        userJournals.add(choiceJournals);
+        userJournals.add(subscriptionJournals);
         return userJournals;
     }
 
@@ -104,45 +107,4 @@ public class PeriodicalService {
     public void createUser(User user) { userRepository.save(user); }
 
     public User getUser(String username) { return userRepository.findByUsername(username); }
-
-    private void journalRelationTemplate(List<? extends RelationTable> relations, Journal[] journalArray,
-                                         List<Journal> userJournals, BiConsumer<List<Journal>,Journal> consumer) {
-        if (!relations.isEmpty()) {
-            RelationTable[] relationsArray = relations.toArray(new RelationTable[relations.size()]);
-            int firstInd = 0;
-            for (int i = 0; i < relationsArray.length; i++) {
-                for (int j = firstInd; j < journalArray.length; j++) {
-                    if (relationsArray[i].getIdJournal() == journalArray[j].getId_journal()) {
-                        consumer.accept(userJournals, journalArray[j]);
-                        firstInd = j + 1;
-                    }
-                }
-            }
-        }
-    }
-
-    abstract class SetJournalsTemplate {
-        final List<Journal> set(List<Journal> journals, User user, List <Journal> userChoiceJournals,
-                                        List <Journal> userSubscriptionJournals) {
-            List<Choice> choices = choiceRepository.findByIdUser(user.getId_user());
-            List<Subscription> subscriptions = subscriptionRepository.findByIdUser(user.getId_user());
-            if (!choices.isEmpty() || !subscriptions.isEmpty()) {
-                Journal[] journalArray = journals.toArray(new Journal[journals.size()]);
-                journals = action(choices, subscriptions, journalArray, userChoiceJournals, userSubscriptionJournals);
-            }
-            return journals;
-        }
-        abstract List<Journal> action(List<Choice> choices, List<Subscription> subscriptions,                                     Journal[] journalArray,
-                                      List <Journal> userChoiceJournals, List <Journal> userSubscriptionJournals);
-    }
-
-    private class GetUserJournals extends SetJournalsTemplate {
-        @Override
-        List<Journal> action(List<Choice> choices, List<Subscription> subscriptions, Journal[] journalArray,
-                             List <Journal> userChoiceJournals, List <Journal> userSubscriptionJournals) {
-            journalRelationTemplate(choices, journalArray, userChoiceJournals, List::add);
-            journalRelationTemplate(subscriptions, journalArray, userSubscriptionJournals, List::add);
-            return null;
-        }
-    }
 }

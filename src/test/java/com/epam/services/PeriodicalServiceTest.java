@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -60,7 +62,7 @@ public class PeriodicalServiceTest {
         periodicalService.addMyChoice(1L, user);
         periodicalService.addMyChoice(2L, user);
         List<Journal> choiceJournals = periodicalService.getUserJournals(user).get(0);
-        periodicalService.deleteMyChoice(choiceJournals.get(0).getId_journal(), user);
+        periodicalService.deleteMyChoice(choiceJournals.get(0).getRelationalTableId(), user);
         List<Journal> choiceJournals2 = periodicalService.getUserJournals(user).get(0);
         assertThat(choiceJournals2.size(), is(1));
     }

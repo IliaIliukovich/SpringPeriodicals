@@ -36,10 +36,10 @@ public class MyJournalController {
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	public String deleteMyChoice (@RequestParam Long currentId) {
+	public String deleteMyChoice (@RequestParam Long choiceId) {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User currentUser = (User)auth.getPrincipal();
-			periodicalService.deleteMyChoice(currentId, currentUser);
+			periodicalService.deleteMyChoice(choiceId, currentUser);
 		return "redirect:/myjournals";
 	}
 

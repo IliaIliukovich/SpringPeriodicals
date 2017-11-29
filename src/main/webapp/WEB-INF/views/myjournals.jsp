@@ -40,7 +40,7 @@
                             <td>${journal.price}</td>
                             <td>
                                 <form:form action="${delUrl}" method="POST">
-                                    <input type="hidden" value="${journal.id_journal}" name="currentId">
+                                    <input type="hidden" value="${journal.relationalTableId}" name="choiceId">
                                     <input type="submit" value="delete"/>
                                 </form:form>
                             </td>

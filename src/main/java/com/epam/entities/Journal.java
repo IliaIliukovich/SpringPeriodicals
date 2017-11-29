@@ -30,6 +30,9 @@ public class Journal {
     @Transient
     private State state = State.UNSUBSCRIBED;
 
+    @Transient
+    private long relationalTableId;
+
     public Journal() {
     }
 
@@ -81,6 +84,14 @@ public class Journal {
         this.state = state;
     }
 
+    public long getRelationalTableId() {
+        return relationalTableId;
+    }
+
+    public void setRelationalTableId(long relationalTableId) {
+        this.relationalTableId = relationalTableId;
+    }
+
     @Override
     public String toString() {
         return "Journal{" +
@@ -89,6 +100,7 @@ public class Journal {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", state=" + state +
+                ", relationalTableId=" + relationalTableId +
                 '}';
     }
 
