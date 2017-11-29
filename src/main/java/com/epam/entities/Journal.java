@@ -28,7 +28,7 @@ public class Journal {
     private BigDecimal price;
 
     @Transient
-    private Subscription subscription = Subscription.UNSUBSCRIBED;
+    private State state = State.UNSUBSCRIBED;
 
     public Journal() {
     }
@@ -57,10 +57,6 @@ public class Journal {
         return price;
     }
 
-    public Subscription getSubscription() {
-        return subscription;
-    }
-
     public void setId_journal(Long id_journal) {
         this.id_journal = id_journal;
     }
@@ -77,8 +73,12 @@ public class Journal {
         this.price = price;
     }
 
-    public void setSubscription(Subscription subscription) {
-        this.subscription = subscription;
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 
     @Override
@@ -88,10 +88,11 @@ public class Journal {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
+                ", state=" + state +
                 '}';
     }
 
-    public enum Subscription {
+    public enum State {
         SUBSCRIBED,
         UNSUBSCRIBED,
         CHOSEN,

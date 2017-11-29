@@ -8,10 +8,11 @@ import com.epam.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 @Service
@@ -33,8 +34,19 @@ public class PeriodicalService {
     }
 
     public List<Journal> getJournals(User user) {
-        List <Journal> journals = journalRepository.findAll();
-        journals = setJournalSubscription(journals, user);
+        List<Journal> journals = journalRepository.findAll();
+        if (user != null && user.getId_user() != null) {
+            journals.forEach(journal -> {
+                Optional<Choice> choice = choiceRepository.findByIdUserAndIdJournal(user.getId_user(), journal.getId_journal());
+                if (choice.isPresent()) {
+                    journal.setState(Journal.State.CHOSEN);
+                } else {
+                    subscriptionRepository.findByIdUserAndIdJournal(user.getId_user(), journal.getId_journal()).ifPresent(e -> {
+                        journal.setState(Journal.State.SUBSCRIBED);
+                    });
+                }
+            });
+        }
         return journals;
     }
 
@@ -47,14 +59,9 @@ public class PeriodicalService {
     }
 
     public void deleteMyChoice(Long id_journal, User user) {
-        List<Choice> choices = choiceRepository.findByIdUser(user.getId_user());
-        if (!choices.isEmpty()) {
-            choices.forEach(choice -> {
-                if (choice.getIdJournal() == id_journal) {
-                    choiceRepository.delete(choice.getId());
-                }
-            });
-        }
+        choiceRepository.findByIdUserAndIdJournal(user.getId_user(), id_journal).ifPresent(choice -> {
+            choiceRepository.delete(choice.getId());
+        });
     }
 
     public List<List<Journal>> getUserJournals(User user) {
@@ -98,13 +105,6 @@ public class PeriodicalService {
 
     public User getUser(String username) { return userRepository.findByUsername(username); }
 
-    private List<Journal> setJournalSubscription(List<Journal> journals, User user) {
-        if (user != null && user.getId_user() != null) {
-           journals = new SetJournalSubscription().set(journals, user, null, null);
-        }
-        return journals;
-    }
-
     private void journalRelationTemplate(List<? extends RelationTable> relations, Journal[] journalArray,
                                          List<Journal> userJournals, BiConsumer<List<Journal>,Journal> consumer) {
         if (!relations.isEmpty()) {
@@ -145,17 +145,4 @@ public class PeriodicalService {
             return null;
         }
     }
-
-    private class SetJournalSubscription extends SetJournalsTemplate {
-        @Override
-        List<Journal> action(List<Choice> choices, List<Subscription> subscriptions, Journal[] journalArray,
-                             List <Journal> userChoiceJournals, List <Journal> userSubscriptionJournals) {
-            List<Journal> journals;
-            journalRelationTemplate(choices, journalArray, null, (t, u) -> u.setSubscription(Journal.Subscription.CHOSEN));
-            journalRelationTemplate(subscriptions, journalArray, null, (t, u) -> u.setSubscription(Journal.Subscription.SUBSCRIBED));
-            journals = Arrays.asList(journalArray);
-            return journals;
-        }
-    }
-
 }
