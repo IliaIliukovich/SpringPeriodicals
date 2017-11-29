@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -53,7 +54,7 @@ public class JournalController {
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String editJournal (@ModelAttribute("journals") List<Journal> journals,
 							   @RequestParam Long currentId, RedirectAttributes attributes) {
-		Optional<Journal> journalOptional = journals.stream().filter(j -> j.getId_journal() == currentId).findAny();
+		Optional<Journal> journalOptional = journals.stream().filter(j -> Objects.equals(j.getId_journal(), currentId)).findAny();
 		if (journalOptional.isPresent()) {
 			attributes.addFlashAttribute("journalToEdit", journalOptional.get());
 			return "redirect:/editjournal";
