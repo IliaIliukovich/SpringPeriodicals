@@ -33,7 +33,7 @@ public class JournalController {
 		List<Journal> journals;
 		if (role.equals("ROLE_USER")) {
 			User currentUser = (User) auth.getPrincipal();
-			journals = periodicalService.getJournals(currentUser);
+			journals = periodicalService.getJournals(currentUser.getId_user());
 		} else {
 			journals = periodicalService.getJournals(null);
 		}
@@ -46,7 +46,7 @@ public class JournalController {
 	public String addMyJournal (@RequestParam Long currentId) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User currentUser = (User)auth.getPrincipal();
-		periodicalService.addMyChoice(currentId, currentUser);
+		periodicalService.addMyChoice(currentId, currentUser.getId_user());
 		return "redirect:/journals";
 	}
 

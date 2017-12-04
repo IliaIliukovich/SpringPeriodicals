@@ -38,7 +38,7 @@ public class PeriodicalServiceTest {
     public  void testGetJournals() throws Exception {
         List<Journal> journals = periodicalService.getJournals(null);
         assertThat(journals, is(notNullValue()));
-        List<Journal> journals2 = periodicalService.getJournals(user);
+        List<Journal> journals2 = periodicalService.getJournals(user.getId_user());
         assertThat(journals2, is(notNullValue()));
     }
 
@@ -51,48 +51,48 @@ public class PeriodicalServiceTest {
 
     @Test
     public  void testAddGetMyChoice() throws Exception {
-        periodicalService.addMyChoice(1L, user);
-        periodicalService.addMyChoice(2L, user);
-        List<Journal> choiceJournals = periodicalService.getUserJournals(user).get(0);
+        periodicalService.addMyChoice(1L, user.getId_user());
+        periodicalService.addMyChoice(2L, user.getId_user());
+        List<Journal> choiceJournals = periodicalService.getUserJournals(user.getId_user()).get(0);
         assertThat(choiceJournals.size(), is(2));
     }
 
     @Test
     public  void testDeleteMyChoice() throws Exception {
-        periodicalService.addMyChoice(1L, user);
-        periodicalService.addMyChoice(2L, user);
-        List<Journal> choiceJournals = periodicalService.getUserJournals(user).get(0);
-        periodicalService.deleteMyChoice(choiceJournals.get(0).getRelationalTableId(), user);
-        List<Journal> choiceJournals2 = periodicalService.getUserJournals(user).get(0);
+        periodicalService.addMyChoice(1L, user.getId_user());
+        periodicalService.addMyChoice(2L, user.getId_user());
+        List<Journal> choiceJournals = periodicalService.getUserJournals(user.getId_user()).get(0);
+        periodicalService.deleteMyChoice(choiceJournals.get(0).getRelationalTableId(), user.getId_user());
+        List<Journal> choiceJournals2 = periodicalService.getUserJournals(user.getId_user()).get(0);
         assertThat(choiceJournals2.size(), is(1));
     }
 
 
     @Test
     public void testGetSubscriptions() throws Exception {
-        periodicalService.addMyChoice(1L, user);
-        periodicalService.addMyChoice(2L, user);
-        periodicalService.pay(BigDecimal.valueOf(3500), user);
-        List<Journal> subscriptionJournals = periodicalService.getUserJournals(user).get(1);
+        periodicalService.addMyChoice(1L, user.getId_user());
+        periodicalService.addMyChoice(2L, user.getId_user());
+        periodicalService.pay(BigDecimal.valueOf(3500), user.getId_user());
+        List<Journal> subscriptionJournals = periodicalService.getUserJournals(user.getId_user()).get(1);
         assertThat(subscriptionJournals.size(), is(2));
     }
 
     @Test
     public void testSumToPay() throws Exception {
-        periodicalService.addMyChoice(1L, user);
-        periodicalService.addMyChoice(2L, user);
-        BigDecimal sumToPay = periodicalService.sumToPay(user);
+        periodicalService.addMyChoice(1L, user.getId_user());
+        periodicalService.addMyChoice(2L, user.getId_user());
+        BigDecimal sumToPay = periodicalService.sumToPay(user.getId_user());
         assertThat(sumToPay, is(BigDecimal.valueOf(350000, 2)));
     }
 
     @Test
     public void testPays() throws Exception {
-        periodicalService.addMyChoice(1L, user);
-        periodicalService.addMyChoice(2L, user);
-        periodicalService.pay(BigDecimal.valueOf(3500), user);
-        List<Journal> subscriptionJournals = periodicalService.getUserJournals(user).get(1);
+        periodicalService.addMyChoice(1L, user.getId_user());
+        periodicalService.addMyChoice(2L, user.getId_user());
+        periodicalService.pay(BigDecimal.valueOf(3500), user.getId_user());
+        List<Journal> subscriptionJournals = periodicalService.getUserJournals(user.getId_user()).get(1);
         assertThat(subscriptionJournals.size(), is(2));
-        List<Journal> choiceJournals = periodicalService.getUserJournals(user).get(0);
+        List<Journal> choiceJournals = periodicalService.getUserJournals(user.getId_user()).get(0);
         assertTrue(choiceJournals.isEmpty());
     }
 

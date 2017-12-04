@@ -27,8 +27,8 @@ public class MyJournalController {
 	public String getMyJournals(Model model){
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User currentUser = (User)auth.getPrincipal();
-		List<List<Journal>> userJournals = periodicalService.getUserJournals(currentUser);
-		BigDecimal sum = periodicalService.sumToPay(currentUser);
+		List<List<Journal>> userJournals = periodicalService.getUserJournals(currentUser.getId_user());
+		BigDecimal sum = periodicalService.sumToPay(currentUser.getId_user());
 		model.addAttribute("myChoiceJournals", userJournals.get(0));
 		model.addAttribute("mySubscriptionJournals", userJournals.get(1));
 		model.addAttribute("sumToPay", sum);
@@ -39,7 +39,7 @@ public class MyJournalController {
 	public String deleteMyChoice (@RequestParam Long choiceId) {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			User currentUser = (User)auth.getPrincipal();
-			periodicalService.deleteMyChoice(choiceId, currentUser);
+			periodicalService.deleteMyChoice(choiceId, currentUser.getId_user());
 		return "redirect:/myjournals";
 	}
 
@@ -47,7 +47,7 @@ public class MyJournalController {
 	public String pay(@RequestParam BigDecimal sum) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User currentUser = (User)auth.getPrincipal();
-		periodicalService.pay(sum, currentUser);
+		periodicalService.pay(sum, currentUser.getId_user());
 		return "redirect:/myjournals";
 	}
 	

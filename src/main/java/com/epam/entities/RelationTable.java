@@ -10,16 +10,12 @@ public abstract class RelationTable {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "id_user")
-    private long idUser;
     @Column(name = "id_journal")
     private long idJournal;
 
     public RelationTable() {}
 
-    public RelationTable(Long id, long idUser, long idJournal) {
-        this.id = id;
-        this.idUser = idUser;
+    public RelationTable(long idJournal) {
         this.idJournal = idJournal;
     }
 
@@ -31,19 +27,19 @@ public abstract class RelationTable {
         this.id = id;
     }
 
-    public long getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(long idUser) {
-        this.idUser = idUser;
-    }
-
     public long getIdJournal() {
         return idJournal;
     }
 
     public void setIdJournal(long idJournal) {
         this.idJournal = idJournal;
+    }
+
+    @Override
+    public String toString() {
+        return "RelationTable{" +
+                "id=" + id +
+                ", idJournal=" + idJournal +
+                '}';
     }
 }
