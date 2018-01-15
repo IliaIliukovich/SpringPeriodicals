@@ -3,8 +3,10 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:security="http://www.springframework.org/schema/security"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:oauth2="http://www.springframework.org/schema/security/oauth2"
 	xsi:schemaLocation="http://www.springframework.org/schema/security
 						http://www.springframework.org/schema/security/spring-security-4.0.xsd
+						http://www.springframework.org/schema/security/spring-security-oauth2.xsd
 						http://www.springframework.org/schema/beans
 						http://www.springframework.org/schema/beans/spring-beans.xsd
 	   					http://www.springframework.org/schema/context
@@ -12,6 +14,26 @@
 
 	<context:component-scan base-package="com.epam"/>
 	<bean class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
+
+	<!--  setup for the authorization and token endpoints /oauth/authorize and /oauth/token -->
+	<oauth2:authorization-server client-details-service-ref="clientDetailsService">
+		<oauth2:authorization-code/>
+	</oauth2:authorization-server>
+
+	<bean id="clientDetailsUserService" class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
+		<constructor-arg ref="clientDetailsService"/>
+	</bean>
+
+	<oauth2:client-details-service id="clientDetailsService">
+
+		<oauth2:client client-id="mailmonkey"
+					   authorized-grant-types="authorization_code"
+					   authorities="ROLE_CLIENT"
+					   scope="read"
+					   secret="somesecretkey"/>
+
+	</oauth2:client-details-service>
+
 
 	<security:http auto-config="true" use-expressions="true">
 		<security:form-login login-page="/login"
@@ -26,6 +48,7 @@
 		<security:intercept-url pattern="/editjournal" access="hasRole('ROLE_ADMIN')"/>
 		<security:intercept-url pattern="/myjournals" access="hasRole('ROLE_USER')"/>
 		<security:intercept-url pattern="/journals/add" access="hasRole('ROLE_USER')"/>
+		<security:intercept-url pattern="/api/**" access="hasRole('ROLE_USER')"/>
 		<security:intercept-url pattern="/register" access="hasRole('ROLE_ANONYMOUS')"/>
 		<security:intercept-url pattern="/**" access="permitAll"/>
 		<security:remember-me key="rememberMe" user-service-ref="customUserDetailsService" />
