@@ -58,9 +58,9 @@
 							 username-parameter="custom_username"
 							 password-parameter="custom_password"
 							 default-target-url="/journals/"
-							 always-use-default-target="true"
 							 authentication-failure-url="/login?error=true"/>
 		<security:logout logout-url="/logout" logout-success-url="/login?logout=true"/>
+		<security:intercept-url pattern="/oauth/**" access="hasRole('ROLE_USER')"/>
 		<security:intercept-url pattern="/addjournal" access="hasRole('ROLE_ADMIN')"/>
 		<security:intercept-url pattern="/editjournal" access="hasRole('ROLE_ADMIN')"/>
 		<security:intercept-url pattern="/myjournals" access="hasRole('ROLE_USER')"/>
