@@ -21,7 +21,7 @@
 
 	<div class="container">
 		
-		<h2>Welcome! Epam lab project</h2>
+		<h2>Welcome! Spring Periodicals test project</h2>
 
 	</div>
 </body>

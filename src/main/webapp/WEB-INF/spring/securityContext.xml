@@ -43,6 +43,7 @@
 		<security:intercept-url pattern="/rest/**" access="#oauth2.hasScope('all_actions')"/>
 		<security:custom-filter ref="oauthFilter" before="PRE_AUTH_FILTER"/>
 		<security:expression-handler ref="expressionHandler"/>
+		<security:csrf disabled="true"/>
 	</security:http>
 
 	<!-- specific settings for the token endpoint -->
