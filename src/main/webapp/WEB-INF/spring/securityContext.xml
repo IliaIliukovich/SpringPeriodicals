@@ -17,7 +17,7 @@
 	<bean class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
 
 	<!--  setup for the authorization and token endpoints /oauth/authorize and /oauth/token -->
-	<oauth2:authorization-server client-details-service-ref="clientDetailsService">
+	<oauth2:authorization-server client-details-service-ref="clientDetailsService" user-approval-handler-ref="userApprovalHandler">
 		<oauth2:authorization-code/>
 	</oauth2:authorization-server>
 
@@ -29,7 +29,7 @@
 		<oauth2:client client-id="periodicalsclient"
 					   authorized-grant-types="authorization_code"
 					   authorities="ROLE_CLIENT"
-					   scope="read"
+					   scope="all_actions"
 					   secret="secretkey"/>
 	</oauth2:client-details-service>
 
@@ -39,8 +39,8 @@
 	<bean id="expressionHandler" class="org.springframework.security.oauth2.provider.expression.OAuth2WebSecurityExpressionHandler"/>
 
 	<!--  the settings for our REST service -->
-	<security:http pattern="/api/**" create-session="stateless" entry-point-ref="oauthTokenEntry">
-		<security:intercept-url pattern="/api/**" access="#oauth2.hasScope('read')"/>
+	<security:http pattern="/rest/**" create-session="stateless" entry-point-ref="oauthTokenEntry">
+		<security:intercept-url pattern="/rest/**" access="#oauth2.hasScope('all_actions')"/>
 		<security:custom-filter ref="oauthFilter" before="PRE_AUTH_FILTER"/>
 		<security:expression-handler ref="expressionHandler"/>
 	</security:http>
@@ -82,5 +82,9 @@
 	</security:authentication-manager>
 
 	<bean id="passwordEncoder" class="org.springframework.security.crypto.password.StandardPasswordEncoder"/>
+
+	<!--  configuration specifically to handle user approval -->
+	<bean id="approvalStore" class="org.springframework.security.oauth2.provider.approval.InMemoryApprovalStore"/>
+	<bean id="userApprovalHandler" class="org.springframework.security.oauth2.provider.approval.ApprovalStoreUserApprovalHandler" autowire="byType"/>
 
 </beans>

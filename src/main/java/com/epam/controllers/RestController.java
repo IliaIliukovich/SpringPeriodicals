@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
-@RequestMapping(value="/api")
-public class ApiController {
+@RequestMapping(value="/rest")
+public class RestController {
 
 	private final PeriodicalService periodicalService;
 
 	@Autowired
-	public ApiController(PeriodicalService periodicalService) {
+	public RestController(PeriodicalService periodicalService) {
 		this.periodicalService = periodicalService;
 	}
 
