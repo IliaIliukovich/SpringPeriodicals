@@ -1,7 +1,11 @@
 # SpringPeriodicals
+Spring MVC Test Project with REST API and OAuth2 Support. Technologies used:
+- Java 8
+- Maven
+- MySql and H2 database
+- Spring MVC
+- Spring Data JPA and Hibernate
+- Spring Security
+- Spring OAuth 2 support 
 
-Final Epam Lab Java Project refactored with Spring framework
-
-task 12, Система периодические издания
-Авторизация: login: admin
-password: admin
+(task 12)
