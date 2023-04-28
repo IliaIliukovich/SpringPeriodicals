@@ -27,7 +27,7 @@ public class AppConfig {
     @Autowired
     public AppConfig(Environment env) { this.env = env; }
 
-    @Bean (name = "dataSourse")
+    @Bean (name = "dataSource")
     public DataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName(env.getProperty("db.driver"));

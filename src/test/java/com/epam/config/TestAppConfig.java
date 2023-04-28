@@ -14,7 +14,7 @@ public class TestAppConfig extends AppConfig {
     public TestAppConfig(Environment env) { super(env); }
 
     @Override
-    @Bean (name = "dataSourse")
+    @Bean (name = "dataSource")
     public DataSource dataSource() {
         EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
         return builder.setType(EmbeddedDatabaseType.H2).addScript("/testSchema.sql").addScript("/testData.sql").build();
