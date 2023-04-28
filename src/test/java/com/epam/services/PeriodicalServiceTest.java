@@ -94,6 +94,11 @@ public class PeriodicalServiceTest {
         assertThat(subscriptionJournals.size(), is(2));
         List<Journal> choiceJournals = periodicalService.getUserJournals(user.getId_user()).get(0);
         assertTrue(choiceJournals.isEmpty());
+
+            System.out.println("Information about current customer\n" +
+                            "Customer name            : {}\n" +
+                            "Customer contact email   : {}\n" +
+                            "Customer uid             : {}");
     }
 
 }

@@ -56,13 +56,13 @@ public class PeriodicalService {
     }
 
     public void addMyChoice(Long id_journal, Long id_user) {
-        User user = userRepository.findOne(id_user);
+        User user = userRepository.findById(id_user).get();
         user.getChoices().add(new Choice(id_journal));
         userRepository.save(user);
     }
 
     public void deleteMyChoice(Long id, Long id_user) {
-        User user = userRepository.findOne(id_user);
+        User user = userRepository.findById(id_user).get();
         for (Choice choice : user.getChoices()) {
             if (choice.getId().equals(id)) {
                 user.getChoices().remove(choice);
@@ -83,10 +83,10 @@ public class PeriodicalService {
     }
 
     public BigDecimal sumToPay(Long id_user) {
-        List<Choice> choices = userRepository.findOne(id_user).getChoices();
+        List<Choice> choices = userRepository.findById(id_user).get().getChoices();
         if (!choices.isEmpty()) {
             List<Journal> journalList = new ArrayList<>();
-            choices.forEach(choice -> journalList.add(journalRepository.findOne((choice.getIdJournal()))));
+            choices.forEach(choice -> journalList.add(journalRepository.findById((choice.getIdJournal())).get()));
             BigDecimal sum = BigDecimal.ZERO;
             for (Journal journal : journalList) {
                 sum = sum.add(journal.getPrice());
@@ -97,7 +97,7 @@ public class PeriodicalService {
     }
 
     public void pay(BigDecimal sum, Long id_user) {
-        User user = userRepository.findOne(id_user);
+        User user = userRepository.findById(id_user).get();
         if (sum.compareTo(sumToPay(id_user)) == 0) {
             List<Choice> choices = user.getChoices();
             if (!choices.isEmpty()) {

@@ -27,7 +27,7 @@ public class JournalRepositoryTest {
 
     @Test
     public void testGetJornal() throws Exception {
-        Journal journal = repository.findOne(1L);
+        Journal journal = repository.findById(1L).get();
         assertThat(journal.getName(), is("STRF.ru"));
     }
 
@@ -47,11 +47,11 @@ public class JournalRepositoryTest {
 
     @Test
     public  void editJournal() throws Exception {
-        Journal journalBeforeTest = repository.findOne(1L);
+        Journal journalBeforeTest = repository.findById(1L).get();
         assertThat(journalBeforeTest.getDescription(), is(not("la-la-la")));
         Journal journal = new Journal(1L,"test", "la-la-la", BigDecimal.valueOf(1777));
         repository.save(journal);
-        Journal journalAfterTest = repository.findOne(1L);
+        Journal journalAfterTest = repository.findById(1L).get();
         assertThat(journalAfterTest.getDescription(), is("la-la-la"));
     }
 

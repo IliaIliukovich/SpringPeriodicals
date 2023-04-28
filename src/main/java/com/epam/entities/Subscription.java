@@ -1,6 +1,6 @@
 package com.epam.entities;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 @Entity
 public class Subscription extends RelationTable {

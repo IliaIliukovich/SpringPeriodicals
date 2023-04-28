@@ -1,7 +1,7 @@
 -- -----------------------------------------------------
 -- Table `periodicals`.`user`
 -- -----------------------------------------------------
-CREATE TABLE `user` (
+CREATE TABLE `periodicalsuser` (
   `id_user`  INT         NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NOT NULL,
   `password` VARCHAR(80) NOT NULL,

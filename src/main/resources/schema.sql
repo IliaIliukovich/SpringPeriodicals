@@ -14,7 +14,7 @@ USE `periodicals` ;
 -- -----------------------------------------------------
 -- Table `periodicals`.`user`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `periodicals`.`user` (
+CREATE TABLE IF NOT EXISTS `periodicals`.`periodicalsuser` (
   `id_user` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NOT NULL,
   `password` VARCHAR(80) NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `periodicals`.`choice` (
   INDEX `fk_choice_id_journal_idx` (`id_journal` ASC),
   CONSTRAINT `fk_choice_id_user`
   FOREIGN KEY (`id_user`)
-  REFERENCES `periodicals`.`user` (`id_user`)
+  REFERENCES `periodicals`.`periodicalsuser` (`id_user`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_choice_id_journal`
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `periodicals`.`subscription` (
   INDEX `fk_subscription_id_journal_idx` (`id_journal` ASC),
   CONSTRAINT `fk_subscription_id_user`
   FOREIGN KEY (`id_user`)
-  REFERENCES `periodicals`.`user` (`id_user`)
+  REFERENCES `periodicals`.`periodicalsuser` (`id_user`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_subscription_id_journal`
