@@ -18,7 +18,7 @@ the payment.
 - jsp
 - Bootstrap
 
-#### How to run the app: 
+### How to run the app: 
 1. Setup MySQL DB
 2. Load dump from /resources/ folder: schema.sql, data.sql files
 3. mvn clean install cargo:run
