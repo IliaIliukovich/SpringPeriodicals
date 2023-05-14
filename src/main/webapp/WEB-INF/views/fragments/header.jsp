@@ -44,8 +44,8 @@
 							</li>
 						</c:when>
 						<c:otherwise>
-							<li><a href="<spring:url value="/login/"/>">Sign In</a></li>
-							<li><a href="<spring:url value="/register/"/>">Register</a></li>
+							<li><a href="<spring:url value="/login"/>">Sign In</a></li>
+							<li><a href="<spring:url value="/register"/>">Register</a></li>
 						</c:otherwise>
 					</c:choose>
     			</li>

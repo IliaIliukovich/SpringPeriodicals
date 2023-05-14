@@ -56,7 +56,7 @@
 							 login-processing-url="/login"
 							 username-parameter="custom_username"
 							 password-parameter="custom_password"
-							 default-target-url="/journals/"
+							 default-target-url="/journals"
 							 authentication-failure-url="/login?error=true"/>
 		<security:logout logout-url="/logout" logout-success-url="/login?logout=true"/>
 <!--		<security:intercept-url pattern="/oauth/**" access="hasRole('ROLE_USER')"/>-->
