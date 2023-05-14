@@ -24,10 +24,10 @@ the payment.
 3. mvn clean install cargo:run
 4. Access URL: http://localhost:8080/SpringPeriodicals
 
-### Roles
-#### administrator:
+### Roles:
+#### administrator
 - login: admin
 - password: admin
-#### reader:
+#### reader
 - login: tom
 - password: tom
